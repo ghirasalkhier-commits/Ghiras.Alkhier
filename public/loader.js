@@ -1,3 +1,15 @@
+
+// Force Login Check
+(function() {
+    var currentPage = window.location.pathname.split('/').pop();
+    if (!currentPage) currentPage = 'index.html'; // root path
+    if (currentPage !== 'login.html') {
+        if (!localStorage.getItem('token')) {
+            window.location.href = 'login.html';
+        }
+    }
+})();
+
 // Global Loader - Only shows if page takes more than 500ms to load
 (function() {
     var loaderShown = false;

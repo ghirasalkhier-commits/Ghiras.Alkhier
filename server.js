@@ -277,7 +277,7 @@ app.post('/api/auth/register', async (req, res) => {
                 const token = jwt.sign(
                     { id: this.lastID, email: email, role: 'user' },
                     JWT_SECRET,
-                    { expiresIn: '7d' }
+                    { expiresIn: '365d' }
                 );
 
                 res.json({ 
@@ -330,7 +330,7 @@ app.post('/api/auth/login', (req, res) => {
         const token = jwt.sign(
             { id: user.id, email: user.email, role: user.role },
             JWT_SECRET,
-            { expiresIn: '7d' }
+            { expiresIn: '365d' }
         );
 
         res.json({ 
@@ -395,7 +395,7 @@ app.post('/api/auth/google', async (req, res) => {
                     const token = jwt.sign(
                         { id: this.lastID, email: email, role: 'user' },
                         JWT_SECRET,
-                        { expiresIn: '7d' }
+                        { expiresIn: '365d' }
                     );
 
                     res.json({ token, user: { email, firstName, lastName, provider: 'google', phone: null, role: 'user', profilePicture, country: initialCountry } });
@@ -411,7 +411,7 @@ app.post('/api/auth/google', async (req, res) => {
                     const token = jwt.sign(
                         { id: user.id, email: user.email, role: user.role },
                         JWT_SECRET,
-                        { expiresIn: '7d' }
+                        { expiresIn: '365d' }
                     );
 
                     res.json({ 
