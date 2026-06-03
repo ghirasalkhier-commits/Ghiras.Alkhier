@@ -289,10 +289,33 @@
         const formattedPhone = phoneInputRaw;
 
         const genderInput = document.getElementById('edit-gender').value;
+        let profilePicSrc = null;
         const picPreviewElement = document.getElementById('edit-profile-picture-preview');
-        let profilePicSrc = '';
-
-        if (hasCustomPhoto) {
+        
+        // Handle image upload if a new file was selected
+        const picInput = document.getElementById('edit-profile-picture-input');
+        const token = localStorage.getItem('token');
+        if (hasCustomPhoto && picInput.files && picInput.files[0]) {
+            const formData = new FormData();
+            formData.append('file', picInput.files[0]);
+            
+            try {
+                const upRes = await fetch('/api/upload', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: formData
+                });
+                
+                if (upRes.ok) {
+                    const upData = await upRes.json();
+                    if (upData.url) {
+                        profilePicSrc = upData.url;
+                    }
+                }
+            } catch(e) {
+                console.error('Image upload failed', e);
+            }
+        } else if (hasCustomPhoto) {
             const bgImage = picPreviewElement.style.backgroundImage;
             if (bgImage && bgImage !== 'none' && !bgImage.includes('avatar.jpg')) {
                 const urlMatch = bgImage.match(/url\(['"]?(.*?)['"]?\)/);

@@ -686,15 +686,27 @@
                         
                         showToast(data.error || 'Login failed', 'error');
                     } else {
-                        if (data.token) localStorage.setItem('token', data.token);
-                        const userData = data.user || data;
-                        localStorage.setItem('currentUser', JSON.stringify({ 
-                            name: (userData.firstName || '') + (userData.lastName ? ' ' + userData.lastName : ''), 
-                            email: userData.email, 
-                            phone: userData.phone, 
-                            gender: userData.gender,
-                            role: userData.role
-                        }));
+                        try {
+                            if (data.token) localStorage.setItem('token', data.token);
+                            const userData = data.user || data;
+                            localStorage.setItem('currentUser', JSON.stringify({ 
+                                name: (userData.firstName || '') + (userData.lastName ? ' ' + userData.lastName : ''), 
+                                email: userData.email, 
+                                phone: userData.phone, 
+                                gender: userData.gender,
+                                role: userData.role
+                            }));
+                        } catch (e) {
+                            console.error('LocalStorage error', e);
+                            localStorage.clear(); // Clean storage if quota is full
+                            if (data.token) localStorage.setItem('token', data.token);
+                            const userData = data.user || data;
+                            localStorage.setItem('currentUser', JSON.stringify({ 
+                                name: (userData.firstName || '') + (userData.lastName ? ' ' + userData.lastName : ''), 
+                                email: userData.email, 
+                                role: userData.role
+                            }));
+                        }
                         setTimeout(() => { window.location.href = 'index.html'; }, 1200);
                     }
                 })
@@ -751,20 +763,26 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             // Auto redirect if already logged in
-            const currentUser = localStorage.getItem('currentUser');
-            const token = localStorage.getItem('token');
-            if (currentUser && token) {
-                try {
-                    const parsedUser = JSON.parse(currentUser);
-                    if (parsedUser && parsedUser.email) {
-                        if (parsedUser.role === 'admin') {
-                            window.location.href = 'admin.html';
-                        } else {
-                            window.location.href = 'index.html';
+            try {
+                const currentUser = localStorage.getItem('currentUser');
+                const token = localStorage.getItem('token');
+                if (currentUser && token) {
+                    try {
+                        const parsedUser = JSON.parse(currentUser);
+                        if (parsedUser && parsedUser.email) {
+                            if (parsedUser.role === 'admin') {
+                                window.location.href = 'admin.html';
+                            } else {
+                                window.location.href = 'index.html';
+                            }
+                            return; // Prevent further execution
                         }
-                        return; // Prevent further execution
-                    }
-                } catch(e) {}
+                    } catch(e) {}
+                } else if (currentUser && !token) {
+                    localStorage.removeItem('currentUser'); // Clean up stale state
+                }
+            } catch (e) {
+                localStorage.clear(); // If quota exceeded or corrupted, just clear
             }
 
             const registerPassword = document.getElementById('register-password');
@@ -880,6 +898,8 @@
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify({
+                                    name: pendingRegistration.name,
+                                    phone: pendingRegistration.phone,
                                     email: pendingRegistration.email,
                                     password: pendingRegistration.password,
                                     gender: pendingRegistration.gender,

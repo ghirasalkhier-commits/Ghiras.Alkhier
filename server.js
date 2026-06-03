@@ -177,6 +177,7 @@ const db = new sqlite3.Database('./database.sqlite', (err) => {
             name TEXT UNIQUE,
             image TEXT
         )`, (err) => {
+            db.run(`ALTER TABLE categories ADD COLUMN is_visible INTEGER DEFAULT 1`, () => {});
             if (!err) {
                 // Seed Categories
                 db.get(`SELECT COUNT(*) as count FROM categories`, (err, row) => {
@@ -437,6 +438,14 @@ app.post('/api/auth/google', async (req, res) => {
         return res.status(401).json({ error: 'Invalid Google Token' });
     }
 });
+
+// Generic upload endpoint
+app.post('/api/upload', authMiddleware, upload.single('file'), (req, res) => {
+    if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+    res.json({ url: req.file.path });
+});
+
+
 
 // Get User Profile
 app.get('/api/profile/:email', authMiddleware, (req, res) => {
