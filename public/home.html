@@ -142,7 +142,6 @@
                 
                 const res = await fetch(url);
                 const categories = await res.json();
-        if (!res.ok) { console.error(categories); return; }
                 
                 if (categories.length === 0) {
                     container.innerHTML = '<p class="text-text-muted text-sm py-4 text-center w-full">No categories currently available.</p>';

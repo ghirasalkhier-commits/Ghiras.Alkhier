@@ -438,7 +438,6 @@
                 });
                 
                 const data = await res.json();
-        if (!res.ok) { console.error(data); return; }
                 if (!res.ok) {
                     showToast(data.error || 'Authentication failed', 'error');
                     return;

@@ -244,7 +244,6 @@
         try {
             const res = await fetch(`/api/profile/${currentUser.email}`);
             const data = await res.json();
-        if (!res.ok) { console.error(data); return; }
             if (res.ok && data) {
                 const fullName = [data.firstName, data.lastName].filter(Boolean).join(' ');
                 if (fullName) document.getElementById('edit-name').value = fullName;
@@ -346,8 +345,8 @@
             localStorage.setItem('currentUser', JSON.stringify(currentUser));
             
             // Send update to server
+            
             try {
-                console.log('Saving to server:', { firstName: currentUser.firstName, lastName: currentUser.lastName, phone: currentUser.phone, gender: currentUser.gender, profilePicture: currentUser.profilePicture });
                 const response = await fetch(`/api/profile/${originalEmail}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
@@ -359,11 +358,22 @@
                         profilePicture: currentUser.profilePicture
                     })
                 });
-                const result = await response.json();
-        if (!response.ok) { console.error(result); return; }
-                console.log('Server response:', result);
+                
+                let result = {};
+                try {
+                    result = await response.json();
+                } catch(e) {
+                    console.error('Non-JSON response', e);
+                }
 
-                // Check if password was entered
+                if (!response.ok) {
+                    const errorElement = document.getElementById('edit-error');
+                    errorElement.textContent = result.error || "Server error while saving.";
+                    errorElement.classList.remove('hidden');
+                    // We shouldn't return, we can just proceed locally if we want, but let's return for correctness.
+                    return;
+                }
+
                 const passwordInput = document.getElementById('edit-password');
                 if (passwordInput && !document.getElementById('set-password-container').classList.contains('hidden')) {
                     const passVal = passwordInput.value.trim();
@@ -377,7 +387,12 @@
                 }
             } catch (e) {
                 console.error("Error saving to server", e);
+                const errorElement = document.getElementById('edit-error');
+                errorElement.textContent = "Network error while saving.";
+                errorElement.classList.remove('hidden');
+                return;
             }
+
         }
 
         window.location.href = 'profile.html';

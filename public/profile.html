@@ -255,7 +255,6 @@
         try {
             const res = await fetch(`/api/profile/${currentUser.email}`);
             const data = await res.json();
-        if (!res.ok) { console.error(data); return; }
             if (res.ok) {
                 const fullName = [data.firstName, data.lastName].filter(Boolean).join(' ') || currentUser.name || "Update your profile";
                 
@@ -289,7 +288,6 @@
         try {
             const res = await fetch(`/api/orders/${encodeURIComponent(currentUser.email)}`);
             const orders = await res.json();
-            if (!res.ok) { console.error(orders); return; }
             const list = document.getElementById('profile-orders-list');
             const seeAllBtn = document.getElementById('see-all-orders-btn');
 
@@ -481,7 +479,6 @@
             });
 
             const data = await res.json();
-        if (!res.ok) { console.error(data); return; }
 
             if (res.ok) {
                 localStorage.removeItem('currentUser');

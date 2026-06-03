@@ -311,7 +311,6 @@
             loadCategoriesForSelect();
             const res = await fetch(`${API_URL}/products?all=1`, { cache: 'no-cache' });
             const products = await res.json();
-        if (!res.ok) { console.error(products); return; }
             const list = document.getElementById('products-list');
             
             if (products.length === 0) {
@@ -348,7 +347,6 @@
     async function loadCategoriesForSelect() {
         const res = await fetch(`${API_URL}/categories?all=1`, { cache: 'no-cache' });
         const cats = await res.json();
-        if (!res.ok) { console.error(cats); return; }
         const dropdown = document.getElementById('category-dropdown');
         
         let html = `<li onclick="selectCategory('', 'Select Category')" class="px-4 py-3 hover:bg-surface-dim cursor-pointer text-sm text-text transition-colors">Select Category</li>`;
@@ -576,7 +574,6 @@
     async function loadCategories() {
         const res = await fetch(`${API_URL}/categories?all=1`, { cache: 'no-cache' });
         const cats = await res.json();
-        if (!res.ok) { console.error(cats); return; }
         const list = document.getElementById('categories-list');
         
         if (cats.length === 0) {
@@ -675,7 +672,6 @@
     async function loadOrders() {
         const res = await fetch(`${API_URL}/admin/orders`);
         allOrders = await res.json();
-        if (!res.ok) { console.error(allOrders); return; }
         renderOrders();
     }
 
@@ -845,7 +841,6 @@
                     loadOrders();
                 } else {
                     const data = await res.json();
-        if (!res.ok) { console.error(data); return; }
                     alert('Error: ' + data.error);
                 }
             } catch(e) {
@@ -861,7 +856,6 @@
     async function loadUsers() {
         const res = await fetch(`${API_URL}/admin/users`);
         allUsers = await res.json();
-        if (!res.ok) { console.error(allUsers); return; }
         const countEl = document.getElementById('users-total-count');
         if (countEl) countEl.innerText = allUsers.length;
         renderUsers(allUsers);
@@ -956,7 +950,6 @@
         try {
             const res = await fetch(`${API_URL}/orders/${user.email}`);
             const orders = await res.json();
-        if (!res.ok) { console.error(orders); return; }
             
             if (orders.length === 0) {
                 ordersContainer.innerHTML = '<p class="text-sm text-text-muted text-center py-4 bg-surface-dim rounded-2xl">No orders found.</p>';
