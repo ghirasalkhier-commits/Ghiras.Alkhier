@@ -3,6 +3,11 @@
 (function() {
     var currentPage = window.location.pathname.split('/').pop();
     if (!currentPage) currentPage = 'index.html'; // root path
+        if (currentPage === 'login.html') {
+        if (localStorage.getItem('token')) {
+            window.location.href = 'index.html';
+        }
+    }
     if (currentPage !== 'login.html') {
         if (!localStorage.getItem('token')) {
             window.location.href = 'login.html';
@@ -166,7 +171,7 @@ window.fetch = async function(...args) {
     const response = await originalFetch(...args);
     
     // Global 401 Unauthorized handling
-    if (response.status === 401 && url.includes('/api/')) {
+    if (response.status === 401 && url.includes('/api/') && !url.includes('/api/auth/')) {
         localStorage.removeItem('token');
         localStorage.removeItem('currentUser');
         if (!window.location.href.includes('index.html')) {
