@@ -14,7 +14,7 @@
     <script src="loader.js"></script>
 <script>
     if (!localStorage.getItem('currentUser') || !localStorage.getItem('token')) {
-        window.location.href = 'index.html';
+        window.location.href = 'login.html';
     }
 </script>
 <script>
@@ -482,8 +482,9 @@
 
             if (res.ok) {
                 localStorage.removeItem('currentUser');
+                localStorage.removeItem('token');
                 setTimeout(() => {
-                    window.location.href = 'index.html';
+                    window.location.href = 'login.html';
                 }, 800);
             } else {
                 btn.innerHTML = 'Delete';
@@ -538,7 +539,8 @@
 
     function confirmLogout() {
         localStorage.removeItem('currentUser');
-        window.location.href = 'index.html';
+        localStorage.removeItem('token');
+        window.location.href = 'login.html';
     }
 </script>
 

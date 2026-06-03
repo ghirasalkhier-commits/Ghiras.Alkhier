@@ -174,8 +174,8 @@ window.fetch = async function(...args) {
     if (response.status === 401 && url.includes('/api/') && !url.includes('/api/auth/')) {
         localStorage.removeItem('token');
         localStorage.removeItem('currentUser');
-        if (!window.location.href.includes('index.html')) {
-            window.location.href = 'index.html';
+        if (!window.location.href.includes('login.html')) {
+            window.location.href = 'login.html';
         }
     }
     

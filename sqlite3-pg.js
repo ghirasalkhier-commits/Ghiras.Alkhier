@@ -16,6 +16,10 @@ class Database {
             if (err) console.error("PostgreSQL connection error:", err);
             else console.log("Connected to PostgreSQL successfully.");
         });
+        
+        this.client.on('error', err => {
+            console.error('Unexpected error on idle PostgreSQL client', err);
+        });
     }
 
     convertQuery(sql) {
