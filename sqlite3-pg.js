@@ -1,4 +1,4 @@
-const { Client } = require('pg');
+const { Pool } = require('pg');
 
 class Database {
     constructor(dbPath, callback) {
@@ -6,9 +6,11 @@ class Database {
         if (!connectionString) {
             console.error("ERROR: DATABASE_URL environment variable is missing!");
         }
-        this.client = new Client({ 
+        this.client = new Pool({ 
             connectionString: connectionString,
-            ssl: { rejectUnauthorized: false }
+            ssl: { rejectUnauthorized: false },
+            max: 10,
+            idleTimeoutMillis: 30000
         });
         
         this.client.connect((err) => {

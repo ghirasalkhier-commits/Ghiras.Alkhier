@@ -9,7 +9,9 @@
         }
     }
     if (currentPage !== 'login.html') {
-        if (!localStorage.getItem('token')) {
+        if (!localStorage.getItem('token') || !localStorage.getItem('currentUser')) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('currentUser');
             window.location.href = 'login.html';
         }
     }

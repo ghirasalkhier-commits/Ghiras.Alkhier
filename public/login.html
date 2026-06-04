@@ -708,7 +708,7 @@
                                 role: userData.role
                             }));
                         }
-                        setTimeout(() => { window.location.href = 'index.html'; }, 1200);
+                        setTimeout(() => { window.location.href = 'index.html'; }, 200);
                     }
                 })
                 .catch(err => {
@@ -922,7 +922,7 @@
                                 gender: data.gender,
                                 role: data.role
                             }));
-                            setTimeout(() => { window.location.href = 'index.html'; }, 1200);
+                            setTimeout(() => { window.location.href = 'index.html'; }, 200);
                         }
                     }).catch(err => {
                         alert('Server error');
@@ -1074,7 +1074,7 @@
                     document.getElementById('reset-password-confirm').value = '';
                     pendingPasswordReset = null;
                     switchTab('login');
-                }, 1200);
+                }, 200);
             }
         }
     </script>
