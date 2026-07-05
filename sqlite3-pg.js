@@ -30,6 +30,7 @@ class Database {
         // Fix table creation syntax
         converted = converted.replace(/AUTOINCREMENT/g, '');
         converted = converted.replace(/INTEGER PRIMARY KEY/g, 'SERIAL PRIMARY KEY');
+        converted = converted.replace(/DATETIME/g, 'TIMESTAMP');
         // Return ID on INSERT
         if (converted.trim().toUpperCase().startsWith('INSERT') && !converted.toUpperCase().includes('RETURNING')) {
             converted += ' RETURNING id';
