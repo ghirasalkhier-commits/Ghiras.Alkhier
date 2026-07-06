@@ -564,6 +564,21 @@
             }
 
             if (type === 'register') {
+                if (emailInput.toLowerCase().endsWith('@gmail.com')) {
+                    const registerEmailInput = document.getElementById('register-email');
+                    const errorMsg = document.getElementById('register-error-msg');
+                    registerEmailInput.classList.add('border-error', 'border');
+                    errorMsg.innerHTML = 'For Gmail accounts, please use the <br/><b>Continue with Google</b> button above.';
+                    errorMsg.classList.remove('hidden');
+                    const clearEmailError = () => {
+                        registerEmailInput.classList.remove('border-error', 'border');
+                        errorMsg.classList.add('hidden');
+                        registerEmailInput.removeEventListener('input', clearEmailError);
+                    };
+                    registerEmailInput.addEventListener('input', clearEmailError);
+                    return;
+                }
+
                 const nameInput = "";
                 const phoneInput = "";
                 const genderInput = document.getElementById('register-gender').value;
