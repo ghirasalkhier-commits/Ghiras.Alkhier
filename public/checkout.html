@@ -1018,47 +1018,48 @@ function renderAddresses() {
 
     
     async function executeOrderPlacement(currentUser, customerDetails, address, method) {
-        const totalEl = document.getElementById('total-amount');
-        if (!totalEl) return;
-        let totalAmount = totalEl.innerText;
-
         const items = JSON.parse(localStorage.getItem(getCartKey())) || [];
         if (items.length === 0) {
             showToast('Your cart is empty.', 'error');
             return;
         }
 
-        let message = `*طلب جديد من ${customerDetails.firstName} ${customerDetails.lastName}*
-`;
-        message += `رقم الهاتف: +962 ${customerDetails.phone}
-`;
-        if (address) {
-            message += `العنوان: ${address.building}, ${address.floor || ''}, ${address.details || ''}
-`;
-            if (address.latitude && address.longitude) {
-                 message += `الموقع: https://www.google.com/maps?q=${address.latitude},${address.longitude}
-`;
-            }
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = 'profile.html';
+            return;
         }
-        message += `طريقة الدفع: ${method}
 
-`;
-        message += `*المنتجات:*
-`;
-        items.forEach(item => {
-            message += `- ${item.quantity}x ${item.name} (JOD ${item.price})
-`;
-        });
-        message += `
-*المجموع الإجمالي: ${totalAmount}*`;
+        try {
+            const res = await fetch('/api/checkout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    items,
+                    customerDetails,
+                    address,
+                    paymentMethod: method
+                })
+            });
 
-        const whatsappNumber = "962790000000"; // Replace with actual number
-        const encodedMessage = encodeURIComponent(message);
-        const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
-        
-        clearCart();
-        window.open(whatsappUrl, '_blank');
-        window.location.href = 'index.html';
+            const data = await res.json();
+            
+            if (!res.ok) {
+                showToast(data.error || 'Failed to place order.', 'error');
+                return;
+            }
+
+            // Success
+            clearCart();
+            alert('Your order has been placed successfully!');
+            window.location.href = 'index.html';
+        } catch (e) {
+            console.error('Checkout error:', e);
+            showToast('An error occurred during checkout.', 'error');
+        }
     }
 
 </script>

@@ -329,6 +329,9 @@
                         <p class="text-xs text-text-muted">${p.category || 'No Category'} | JOD ${p.price.toFixed(2)}</p>
                     </div>
                     <div class="flex gap-2">
+                        <button onclick="toggleProductFeature(${p.id}, ${p.is_featured ? 0 : 1})" class="${p.is_featured ? 'text-yellow-500' : 'text-text-muted hover:text-yellow-500'} hover:bg-surface-dim p-2 rounded-full transition-colors" title="${p.is_featured ? 'Unfeature Product' : 'Feature Product'}">
+                            <span class="material-symbols-outlined text-[20px]" ${p.is_featured ? 'style="font-variation-settings: \'FILL\' 1;"' : ''}>star</span>
+                        </button>
                         <button onclick="toggleVisibility('products', ${p.id}, ${isVisible ? 0 : 1})" class="${isVisible ? 'text-text-muted hover:text-red-500' : 'text-primary'} hover:bg-surface-dim p-2 rounded-full transition-colors" title="${isVisible ? 'Hide Product' : 'Show Product'}">
                             <span class="material-symbols-outlined text-[20px]">${isVisible ? 'visibility_off' : 'visibility'}</span>
                         </button>
@@ -642,6 +645,20 @@
     }
 
     
+    async function toggleProductFeature(id, isFeatured) {
+        try {
+            await fetch(`${API_URL}/products/${id}/feature`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+                body: JSON.stringify({ is_featured: isFeatured })
+            });
+            loadProducts();
+        } catch(e) {
+            console.error('Error toggling feature:', e);
+            alert('Failed to update feature status');
+        }
+    }
+
     async function toggleVisibility(type, id, isVisible) {
         try {
             await fetch(`${API_URL}/${type}/${id}/visibility`, {

@@ -168,6 +168,7 @@ const db = new sqlite3.Database('./database.sqlite', (err) => {
             });
             db.run(`ALTER TABLE products ADD COLUMN stock INTEGER DEFAULT 1`, (err) => {});
             db.run(`ALTER TABLE products ADD COLUMN is_visible INTEGER DEFAULT 0`, (err) => {});
+            db.run(`ALTER TABLE products ADD COLUMN is_featured INTEGER DEFAULT 0`, (err) => {});
             console.log('Products table ready.');
         });
 
@@ -741,6 +742,15 @@ app.put('/api/products/:id/visibility', authMiddleware, adminMiddleware, (req, r
     db.run(`UPDATE products SET is_visible = ? WHERE id = ?`, [is_visible, id], function(err) {
         if (err) return res.status(500).json({ error: err.message });
         res.json({ success: true });
+    });
+});
+
+app.put('/api/products/:id/feature', authMiddleware, adminMiddleware, (req, res) => {
+    const { id } = req.params;
+    const { is_featured } = req.body;
+    db.run(`UPDATE products SET is_featured = ? WHERE id = ?`, [is_featured ? 1 : 0, id], function(err) {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ success: true, is_featured: is_featured ? 1 : 0 });
     });
 });
 
