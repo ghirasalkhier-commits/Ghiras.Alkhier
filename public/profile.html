@@ -78,10 +78,6 @@
         <input type="file" id="profile-upload-input" accept="image/*" class="hidden">
         <div class="text-center">
             <h2 id="profile-name" class="text-2xl font-bold text-text mb-1">Fatima Al-Zahrani</h2>
-            <div class="mt-2 inline-flex items-center gap-1 rounded-full bg-white px-4 py-1.5 text-xs font-semibold text-primary shadow-sm">
-                <span class="material-symbols-outlined text-[16px]">eco</span>
-                Green Thumb Level <span id="user-level">0</span>
-            </div>
         </div>
     </div>
 </div>
@@ -126,16 +122,6 @@
                 </div>
                 <span class="material-symbols-outlined text-text-muted">chevron_right</span>
             </button>
-            <!-- Notification Settings -->
-            <button class="group flex items-center justify-between p-4 hover:bg-surface-dim transition-colors">
-                <div class="flex items-center gap-4">
-                    <div class="flex h-12 w-12 items-center justify-center rounded-full bg-[#bcebd2] text-[#0d3f26] group-hover:bg-[#0d3f26] group-hover:text-white transition-colors">
-                        <span class="material-symbols-outlined">notifications</span>
-                    </div>
-                    <span class="font-semibold text-text">Notification Settings</span>
-                </div>
-                <span class="material-symbols-outlined text-text-muted">chevron_right</span>
-            </button>
         </div>
     </div>
     
@@ -144,7 +130,7 @@
         <div class="flex items-center justify-between px-2">
             <div>
                 <h3 class="text-xl font-bold text-text">My Garden</h3>
-                <p id="garden-count" class="text-sm text-text-muted">You have 0 plants growing</p>
+                <p id="garden-count" class="text-sm text-text-muted">Plant your first seed today!</p>
             </div>
             <button id="see-all-garden-btn" class="text-sm font-bold text-primary hover:text-primary/80 hidden">See All</button>
         </div>
@@ -311,11 +297,25 @@
                 });
             });
 
-            if (gardenCount) gardenCount.textContent = `You have ${gardenItems.length} plant${gardenItems.length !== 1 ? 's' : ''} growing`;
+            if (gardenCount) {
+                if (gardenItems.length === 0) {
+                    gardenCount.textContent = 'Plant your first seed today!';
+                } else {
+                    gardenCount.textContent = `You have ${gardenItems.length} plant${gardenItems.length !== 1 ? 's' : ''} growing`;
+                }
+            }
             
             if (gardenList) {
                 if (gardenItems.length === 0) {
-                    gardenList.innerHTML = `<p class="text-center text-text-muted text-sm w-full mt-4">Your garden is empty. Completed orders will appear here.</p>`;
+                    gardenList.innerHTML = `
+                    <div class="bg-white p-6 rounded-3xl shadow-soft text-center border border-surface-dim w-full mx-6 mt-2 mb-2">
+                        <div class="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-3">
+                            <span class="text-3xl">🌱</span>
+                        </div>
+                        <h2 class="text-lg font-bold text-text mb-1">Your Garden is Empty</h2>
+                        <p class="text-text-muted mb-4 text-sm leading-relaxed">Every great garden starts with a single seed. Buy a plant and watch your garden grow here!</p>
+                        <button onclick="window.location.href='product.html'" class="bg-primary text-white font-bold py-2 px-6 rounded-full shadow-soft hover:bg-primary/90 transition-colors text-sm">Start Growing</button>
+                    </div>`;
                     if (seeAllGardenBtn) seeAllGardenBtn.classList.add('hidden');
                 } else {
                     if (seeAllGardenBtn) seeAllGardenBtn.classList.remove('hidden');

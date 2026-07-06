@@ -198,7 +198,7 @@
                 const res = await fetch('/api/products');
                 const products = await res.json();
                 
-                const featured = products.filter(p => p.is_featured);
+                const featured = products.filter(p => p.is_featured && (p.stock === undefined || p.stock > 0));
                 
                 if (featured.length === 0) {
                     container.innerHTML = '';
@@ -209,7 +209,7 @@
                 container.parentElement.style.display = 'block';
 
                 container.innerHTML = featured.map(p => `
-                    <div class="bg-white rounded-3xl shadow-soft border border-surface-dim overflow-hidden flex items-center p-3 gap-4" onclick="window.location.href='product.html?category=${encodeURIComponent(p.category || '')}'">
+                    <div class="bg-white rounded-3xl shadow-soft border border-surface-dim overflow-hidden flex items-center p-3 gap-4 cursor-pointer hover:border-primary/30 transition-colors" onclick="window.location.href='product.html?id=${p.id}'">
                         <img src="${(()=>{ try { return JSON.parse(p.image)[0]; } catch(e){ return p.image || 'https://via.placeholder.com/150'; } })()}" class="w-24 h-24 rounded-2xl object-cover bg-surface-dim mix-blend-multiply flex-shrink-0">
                         <div class="flex-1">
                             <h4 class="font-bold text-text text-lg leading-tight mb-1">${p.name}</h4>
