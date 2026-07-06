@@ -180,12 +180,15 @@
             <form id="login-form" class="space-y-5 transition-opacity duration-300" onsubmit="handleAuth(event, 'login')">
                 <div>
                     <label class="block font-label-sm text-label-sm text-on-surface-variant mb-1 ml-4" for="login-email">Email Address</label>
-                    <input id="login-email" type="email" required class="w-full bg-surface-bright border border-transparent focus:border-primary focus:ring-0 rounded-full px-6 py-4 font-body-md text-body-md text-on-surface transition-colors" placeholder="hello@ghirasalkhier.com" />
+                    <input id="login-email" type="email" required class="w-full bg-surface-bright border border-transparent focus:border-primary focus:ring-0 rounded-full px-6 py-4 font-body-md text-body-md text-on-surface transition-colors" />
                 </div>
                 <div>
-                    <label class="block font-label-sm text-label-sm text-on-surface-variant mb-1 ml-4" for="login-password">Password</label>
+                    <label class="block font-label-sm text-label-sm text-on-surface-variant mb-1 ml-4 flex justify-between" for="login-password">
+                        <span>Password</span>
+                        <span id="login-password-lang-error" class="text-error font-bold text-[10px] hidden">English only!</span>
+                    </label>
                     <div class="relative">
-                        <input id="login-password" type="password" required class="w-full bg-surface-bright border border-transparent focus:border-primary focus:ring-0 rounded-full px-6 py-4 pr-12 font-body-md text-body-md text-on-surface transition-colors" placeholder="••••••••" />
+                        <input id="login-password" type="password" required class="w-full bg-surface-bright border border-transparent focus:border-primary focus:ring-0 rounded-full px-6 py-4 pr-12 font-body-md text-body-md text-on-surface transition-colors" />
                         <button type="button" onclick="togglePassword('login-password')" class="absolute inset-y-0 right-0 pr-4 flex items-center text-outline hover:text-on-surface transition-colors">
                             <span class="material-symbols-outlined text-[20px]">visibility</span>
                         </button>
@@ -247,13 +250,16 @@
                 </div>
                 <div>
                     <label class="block font-label-sm text-label-sm text-on-surface-variant mb-1 ml-4" for="register-email">Email Address</label>
-                    <input id="register-email" type="email" required class="w-full bg-surface-bright border border-transparent focus:border-primary focus:ring-0 rounded-full px-5 py-3 font-body-md text-body-md text-on-surface transition-colors" placeholder="hello@ghirasalkhier.com" />
+                    <input id="register-email" type="email" required class="w-full bg-surface-bright border border-transparent focus:border-primary focus:ring-0 rounded-full px-5 py-3 font-body-md text-body-md text-on-surface transition-colors" />
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block font-label-sm text-label-sm text-on-surface-variant mb-1 ml-4" for="register-password">Password</label>
+                        <label class="block font-label-sm text-label-sm text-on-surface-variant mb-1 ml-4 flex justify-between" for="register-password">
+                            <span>Password</span>
+                            <span id="password-lang-error" class="text-error font-bold text-[10px] hidden">English only!</span>
+                        </label>
                         <div class="relative">
-                            <input id="register-password" type="password" required class="w-full bg-surface-bright border border-transparent focus:border-primary focus:ring-0 rounded-full py-3 pl-5 pr-10 font-body-md text-body-md text-on-surface transition-colors" placeholder="Password" />
+                            <input id="register-password" type="password" required class="w-full bg-surface-bright border border-transparent focus:border-primary focus:ring-0 rounded-full py-3 pl-5 pr-10 font-body-md text-body-md text-on-surface transition-colors" />
                             <button type="button" onclick="togglePassword('register-password')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-outline hover:text-on-surface transition-colors">
                                 <span class="material-symbols-outlined text-[18px]">visibility</span>
                             </button>
@@ -262,7 +268,7 @@
                     <div>
                         <label class="block font-label-sm text-label-sm text-on-surface-variant mb-1 ml-4" for="register-password-confirm">Confirm</label>
                         <div class="relative">
-                            <input id="register-password-confirm" type="password" required class="w-full bg-surface-bright border border-transparent focus:border-primary focus:ring-0 rounded-full py-3 pl-5 pr-10 font-body-md text-body-md text-on-surface transition-colors" placeholder="Confirm" />
+                            <input id="register-password-confirm" type="password" required class="w-full bg-surface-bright border border-transparent focus:border-primary focus:ring-0 rounded-full py-3 pl-5 pr-10 font-body-md text-body-md text-on-surface transition-colors" />
                             <button type="button" onclick="togglePassword('register-password-confirm')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-outline hover:text-on-surface transition-colors">
                                 <span class="material-symbols-outlined text-[18px]">visibility</span>
                             </button>
@@ -308,7 +314,7 @@
                 </div>
                 <div>
                     <label class="block font-label-sm text-label-sm text-on-surface-variant mb-1 ml-4" for="forgot-email">Email Address</label>
-                    <input id="forgot-email" type="email" required class="w-full bg-surface-bright border border-transparent focus:border-primary focus:ring-0 rounded-full px-6 py-4 font-body-md text-body-md text-on-surface transition-colors" placeholder="hello@ghirasalkhier.com" />
+                    <input id="forgot-email" type="email" required class="w-full bg-surface-bright border border-transparent focus:border-primary focus:ring-0 rounded-full px-6 py-4 font-body-md text-body-md text-on-surface transition-colors" />
                 </div>
                 <div id="forgot-error-msg" class="text-xs font-bold text-error text-center hidden"></div>
                 <button type="submit" class="w-full bg-primary text-on-primary rounded-full py-4 font-label-md text-label-md shadow-[0_4px_20px_rgba(44,105,78,0.1)] hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
@@ -348,7 +354,7 @@
                 <div>
                     <label class="block font-label-sm text-label-sm text-on-surface-variant mb-1 ml-4" for="reset-password">New Password</label>
                     <div class="relative">
-                        <input id="reset-password" type="password" required class="w-full bg-surface-bright border border-transparent focus:border-primary focus:ring-0 rounded-full px-6 py-4 pr-12 font-body-md text-body-md text-on-surface transition-colors" placeholder="Create a strong password" />
+                        <input id="reset-password" type="password" required class="w-full bg-surface-bright border border-transparent focus:border-primary focus:ring-0 rounded-full px-6 py-4 pr-12 font-body-md text-body-md text-on-surface transition-colors" />
                         <button type="button" onclick="togglePassword('reset-password')" class="absolute inset-y-0 right-0 pr-4 flex items-center text-outline hover:text-on-surface transition-colors">
                             <span class="material-symbols-outlined text-[20px]">visibility</span>
                         </button>
@@ -357,7 +363,7 @@
                 <div>
                     <label class="block font-label-sm text-label-sm text-on-surface-variant mb-1 ml-4" for="reset-password-confirm">Confirm New Password</label>
                     <div class="relative">
-                        <input id="reset-password-confirm" type="password" required class="w-full bg-surface-bright border border-transparent focus:border-primary focus:ring-0 rounded-full px-6 py-4 pr-12 font-body-md text-body-md text-on-surface transition-colors" placeholder="Confirm your new password" />
+                        <input id="reset-password-confirm" type="password" required class="w-full bg-surface-bright border border-transparent focus:border-primary focus:ring-0 rounded-full px-6 py-4 pr-12 font-body-md text-body-md text-on-surface transition-colors" />
                         <button type="button" onclick="togglePassword('reset-password-confirm')" class="absolute inset-y-0 right-0 pr-4 flex items-center text-outline hover:text-on-surface transition-colors">
                             <span class="material-symbols-outlined text-[20px]">visibility</span>
                         </button>
@@ -549,6 +555,13 @@
             e.preventDefault();
             const emailInput = document.getElementById(type + '-email').value;
             const passwordInput = document.getElementById(type + '-password').value;
+
+            if (/[^\x00-\x7F]/.test(passwordInput)) {
+                const errSpan = type === 'login' ? document.getElementById('login-password-lang-error') : document.getElementById('password-lang-error');
+                if (errSpan) errSpan.classList.remove('hidden');
+                document.getElementById(type + '-password').classList.add('border-error', 'border');
+                return;
+            }
 
             if (type === 'register') {
                 const nameInput = "";
@@ -1077,6 +1090,29 @@
                 }, 200);
             }
         }
+        document.getElementById('register-password').addEventListener('input', function(e) {
+            const val = e.target.value;
+            const errSpan = document.getElementById('password-lang-error');
+            if (/[^\x00-\x7F]/.test(val)) {
+                errSpan.classList.remove('hidden');
+                e.target.classList.add('border-error', 'border');
+            } else {
+                errSpan.classList.add('hidden');
+                e.target.classList.remove('border-error', 'border');
+            }
+        });
+
+        document.getElementById('login-password').addEventListener('input', function(e) {
+            const val = e.target.value;
+            const errSpan = document.getElementById('login-password-lang-error');
+            if (/[^\x00-\x7F]/.test(val)) {
+                errSpan.classList.remove('hidden');
+                e.target.classList.add('border-error', 'border');
+            } else {
+                errSpan.classList.add('hidden');
+                e.target.classList.remove('border-error', 'border');
+            }
+        });
     </script>
 </body>
 </html>
