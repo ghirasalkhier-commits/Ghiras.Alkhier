@@ -960,9 +960,10 @@ function renderAddresses() {
         }
 
         // Already has info, proceed
+        const cName = currentUser.name || (currentUser.firstName ? currentUser.firstName + ' ' + (currentUser.lastName || '') : '').trim();
         const customerDetails = {
-            firstName: currentUser.name.split(' ')[0] || '',
-            lastName: currentUser.name.split(' ').slice(1).join(' ') || '',
+            firstName: cName.split(' ')[0] || '',
+            lastName: cName.split(' ').slice(1).join(' ') || '',
             phone: currentUser.phone || ''
         };
         

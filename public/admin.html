@@ -897,11 +897,16 @@
             return;
         }
 
-        list.innerHTML = usersToRender.map(u => `
+        list.innerHTML = usersToRender.map(u => {
+            const uFirst = u.firstName || u.firstname || '';
+            const uLast = u.lastName || u.lastname || '';
+            const uPic = u.profilePicture || u.profilepicture;
+
+            return `
             <div class="bg-white p-5 rounded-3xl shadow-soft border border-surface-dim flex flex-col gap-3">
                 <div class="flex justify-between items-center">
                     <div>
-                        <h4 class="font-bold text-text">${u.firstName || ''} ${u.lastName || ''} ${u.role === 'admin' ? '<span class="text-blue-500 text-xs font-bold px-1 bg-blue-50 rounded-md ml-1">ADMIN</span>' : ''}</h4>
+                        <h4 class="font-bold text-text">${uFirst} ${uLast} ${u.role === 'admin' ? '<span class="text-blue-500 text-xs font-bold px-1 bg-blue-50 rounded-md ml-1">ADMIN</span>' : ''}</h4>
                         <p class="text-sm text-text-muted flex items-center gap-2">
                             ${u.email}
                             <span class="text-[9px] font-bold text-text-muted uppercase tracking-wider bg-surface-dim px-1.5 py-0.5 rounded-md border border-surface-dim/50">${u.provider}</span>
@@ -911,8 +916,8 @@
                         </p>
                     </div>
                     <div class="bg-surface-dim p-2 rounded-full flex flex-col items-center justify-center shadow-sm shrink-0 w-16 h-16 bg-cover bg-center overflow-hidden relative"
-                         style="${u.profilePicture ? `background-image: url('${u.profilePicture}');` : (u.gender ? `background-image: url('${u.gender === 'female' ? 'female-avatar.jpg' : 'male-avatar.jpg'}');` : '')}">
-                        ${!u.profilePicture && !u.gender ? `
+                         style="${uPic ? `background-image: url('${uPic}');` : (u.gender ? `background-image: url('${u.gender === 'female' ? 'female-avatar.jpg' : 'male-avatar.jpg'}');` : '')}">
+                        ${!uPic && !u.gender ? `
                         <span class="material-symbols-outlined text-text-muted text-2xl ${u.provider === 'google' ? 'text-green-600' : ''}">
                             ${u.provider === 'google' ? 'account_circle' : 'person'}
                         </span>
@@ -923,14 +928,19 @@
                     <span class="material-symbols-outlined text-[18px]">visibility</span> View Full Details
                 </button>
             </div>
-        `).join('');
+            `;
+        }).join('');
     }
 
     async function viewUserDetails(user) {
+        const uFirst = user.firstName || user.firstname || '';
+        const uLast = user.lastName || user.lastname || '';
+        const uPic = user.profilePicture || user.profilepicture;
+        
         // Populate modal data
         const initialEl = document.getElementById('modal-user-initial');
-        if (user.profilePicture) {
-            initialEl.parentElement.style.backgroundImage = `url('${user.profilePicture}')`;
+        if (uPic) {
+            initialEl.parentElement.style.backgroundImage = `url('${uPic}')`;
             initialEl.parentElement.classList.add('bg-cover', 'bg-center');
             initialEl.style.display = 'none';
         } else if (user.gender) {
@@ -941,10 +951,10 @@
         } else {
             initialEl.parentElement.style.backgroundImage = '';
             initialEl.style.display = 'block';
-            initialEl.textContent = (user.firstName ? user.firstName[0] : (user.email ? user.email[0] : 'U')).toUpperCase();
+            initialEl.textContent = (uFirst ? uFirst[0] : (user.email ? user.email[0] : 'U')).toUpperCase();
         }
 
-        document.getElementById('modal-user-name').textContent = `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'No Name';
+        document.getElementById('modal-user-name').textContent = `${uFirst} ${uLast}`.trim() || 'No Name';
         document.getElementById('modal-user-role').textContent = user.role.toUpperCase();
         document.getElementById('modal-user-email').textContent = user.email;
         document.getElementById('modal-user-phone').textContent = user.phone || 'Not provided';
@@ -1072,9 +1082,9 @@
         <span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 0;">group</span>
         <span class="text-[10px] font-medium tracking-wide">Users</span>
     </button>
-    <a href="profile.html" class="flex flex-col items-center gap-1 text-text-muted hover:text-primary transition-colors">
-        <span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 0;">person</span>
-        <span class="text-[10px] font-medium tracking-wide">Profile</span>
+    <a href="home.html" class="flex flex-col items-center gap-1 text-text-muted hover:text-primary transition-colors">
+        <span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 0;">home</span>
+        <span class="text-[10px] font-medium tracking-wide">Home</span>
     </a>
 </nav>
 
