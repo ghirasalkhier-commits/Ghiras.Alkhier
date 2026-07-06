@@ -911,7 +911,7 @@
                         </p>
                     </div>
                     <div class="bg-surface-dim p-2 rounded-full flex flex-col items-center justify-center shadow-sm shrink-0 w-16 h-16 bg-cover bg-center overflow-hidden relative"
-                         style="background-image: url('${u.profilePicture || (u.gender === 'female' ? 'female-avatar.jpg' : 'male-avatar.jpg')}');">
+                         style="${u.profilePicture ? `background-image: url('${u.profilePicture}');` : (u.gender ? `background-image: url('${u.gender === 'female' ? 'female-avatar.jpg' : 'male-avatar.jpg'}');` : '')}">
                         ${!u.profilePicture && !u.gender ? `
                         <span class="material-symbols-outlined text-text-muted text-2xl ${u.provider === 'google' ? 'text-green-600' : ''}">
                             ${u.provider === 'google' ? 'account_circle' : 'person'}
@@ -963,8 +963,14 @@
             content.classList.remove('translate-y-full', 'sm:translate-y-8');
         }, 10);
 
-        // Fetch Orders locally from allOrders
+        // Fetch Orders locally from allOrders or load them if empty
         try {
+            if (allOrders.length === 0) {
+                const res = await fetch(`${API_URL}/admin/orders`);
+                if (res.ok) {
+                    allOrders = await res.json();
+                }
+            }
             const orders = allOrders.filter(o => o.user_email === user.email);
             
             if (orders.length === 0) {
@@ -1049,7 +1055,7 @@
     loadProducts();
 </script>
 <!-- Admin Bottom Navigation -->
-<nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-3rem)] max-w-sm bg-white/80 backdrop-blur-xl border border-white/40 shadow-soft rounded-full px-4 py-3 z-50 flex justify-between items-center">
+<nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-3rem)] max-w-sm bg-white/80 backdrop-blur-xl border border-white/40 shadow-soft rounded-full px-4 py-3 z-40 flex justify-between items-center">
     <button onclick="switchTab('products')" id="nav-products" class="flex flex-col items-center gap-1 text-primary transition-colors">
         <span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
         <span class="text-[10px] font-medium tracking-wide">Products</span>
