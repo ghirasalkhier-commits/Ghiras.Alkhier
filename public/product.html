@@ -500,10 +500,12 @@
             async function loadShop() {
                 try {
                     // Fetch Categories
-                    allCategories = await window.googleSheetsData.getCategories();
+                    const catRes = await fetch('/api/categories');
+                    allCategories = await catRes.json();
 
                     // Fetch Products
-                    allProducts = await window.googleSheetsData.getProducts();
+                    const prodRes = await fetch('/api/products');
+                    allProducts = await prodRes.json();
 
                     // Pre-select category from URL if present
                     const params = new URLSearchParams(window.location.search);
@@ -528,7 +530,8 @@
         }
 
         try {
-            const allProducts = await window.googleSheetsData.getProducts();
+            const prodRes = await fetch('/api/products');
+            const allProducts = await prodRes.json();
             if (!allProducts || allProducts.length === 0) throw new Error('Failed to fetch products');
             const p = allProducts.find(prod => prod.id == id);
             if (!p) throw new Error('Not found');

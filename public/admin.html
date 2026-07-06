@@ -946,10 +946,9 @@
             content.classList.remove('translate-y-full', 'sm:translate-y-8');
         }, 10);
 
-        // Fetch Orders
+        // Fetch Orders locally from allOrders
         try {
-            const res = await fetch(`${API_URL}/orders/${user.email}`);
-            const orders = await res.json();
+            const orders = allOrders.filter(o => o.user_email === user.email);
             
             if (orders.length === 0) {
                 ordersContainer.innerHTML = '<p class="text-sm text-text-muted text-center py-4 bg-surface-dim rounded-2xl">No orders found.</p>';

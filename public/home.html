@@ -137,8 +137,8 @@
                 container.className = "flex flex-wrap justify-center gap-3.5 mx-auto max-w-sm px-1";
                 container.innerHTML = '<p class="text-text-muted text-sm py-4 text-center w-full">Loading categories...</p>';
                 
-                // Authentication and dynamic query removed for static site
-                const url = 'data/categories.json';
+                // Fetch from API
+                const url = '/api/categories';
                 
                 const res = await fetch(url);
                 const categories = await res.json();
