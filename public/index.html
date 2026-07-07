@@ -138,7 +138,9 @@
                 container.innerHTML = '<p class="text-text-muted text-sm py-4 text-center w-full">Loading categories...</p>';
                 
                 // Fetch from API
-                const url = '/api/categories';
+                const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+                const isAdmin = currentUser && currentUser.role === 'admin';
+                const url = isAdmin ? '/api/categories?all=1' : '/api/categories';
                 
                 const res = await fetch(url);
                 const categories = await res.json();
@@ -151,12 +153,12 @@
                 container.innerHTML = categories.map(cat => {
                     const displayImage = cat.image || 'https://via.placeholder.com/400?text=' + encodeURIComponent(cat.name);
                     return `
-                        <article class="cursor-pointer transform hover:scale-[1.03] active:scale-[0.98] transition-all flex flex-col items-center justify-center text-center w-[72px]" onclick="window.location.href='product.html?category=${encodeURIComponent(cat.name)}'">
+                        <article class="cursor-pointer transform hover:scale-[1.03] active:scale-[0.98] transition-all flex flex-col items-center justify-center text-center w-24" onclick="window.location.href='product.html?category=${encodeURIComponent(cat.name)}'">
                             <div class="relative w-16 h-16 rounded-2xl overflow-hidden mb-2 shadow-soft border-2 border-white bg-white flex items-center justify-center">
                                 ${cat.is_visible === 0 ? `<span class="absolute inset-0 bg-red-950/65 flex items-center justify-center text-[10px] text-white font-bold rounded-2xl">Hidden</span>` : ''}
                                 <img alt="${cat.name}" class="w-full h-full object-cover rounded-2xl" src="${displayImage}"/>
                             </div>
-                            <h4 class="font-black text-[13px] text-primary text-center leading-tight tracking-wide line-clamp-1 w-full px-0.5">${cat.name}</h4>
+                            <h4 class="font-black text-[13px] text-primary text-center leading-tight tracking-wide px-0.5">${cat.name}</h4>
                         </article>
                     `;
                 }).join('');
@@ -195,7 +197,9 @@
             try {
                 const container = document.getElementById('featured-products-container');
                 if (!container) return;
-                const res = await fetch('/api/products');
+                const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+                const isAdmin = currentUser && currentUser.role === 'admin';
+                const res = await fetch(isAdmin ? '/api/products?all=1' : '/api/products');
                 const products = await res.json();
                 
                 const featured = products.filter(p => p.is_featured && (p.stock === undefined || p.stock > 0));
