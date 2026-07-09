@@ -34,6 +34,10 @@
             body, h1, h2, h3, h4, h5, h6, p, span, div, a, button, input, textarea {
                 font-family: 'Cairo', sans-serif !important;
             }
+            .material-symbols-outlined {
+                font-family: 'Material Symbols Outlined' !important;
+                direction: ltr !important;
+            }
         `;
         document.head.appendChild(style);
     }
@@ -86,6 +90,25 @@
                 input.setAttribute('placeholder', dict[placeholder]);
             }
         });
+    };
+    
+    window.getLangField = function(item, field) {
+        if (!item) return '';
+        var isArabic = localStorage.getItem('site_language') === 'ar';
+        var val = item[field];
+        if (isArabic) {
+            var arField = field + '_ar';
+            if (item[arField] && item[arField].trim() !== '') {
+                val = item[arField];
+            } else {
+                // Support camelCase too (e.g. nameAr)
+                var camelArField = field + 'Ar';
+                if (item[camelArField] && item[camelArField].trim() !== '') {
+                    val = item[camelArField];
+                }
+            }
+        }
+        return val || '';
     };
     
     document.addEventListener('DOMContentLoaded', function() {
