@@ -359,7 +359,7 @@
             document.getElementById('checkout-phone').value = currentUser.phone || '';
             
             document.getElementById('user-name').innerText = currentUser.name;
-            document.getElementById('user-phone').innerText = '+962 ' + currentUser.phone;
+            document.getElementById('user-phone').innerHTML = '<span dir="ltr">+962 ' + currentUser.phone + '</span>';
         }
 
         loadAddresses();
@@ -746,7 +746,7 @@ function renderAddresses() {
         closePersonalDetailsModal();
         
         document.getElementById('user-name').innerText = newName;
-        document.getElementById('user-phone').innerText = '+962 ' + phone;
+        document.getElementById('user-phone').innerHTML = '<span dir="ltr">+962 ' + phone + '</span>';
     }
 
     function renderOrderItems() {
@@ -971,7 +971,7 @@ function renderAddresses() {
             return;
         }
 
-        const pickupSelected = document.getElementById('payment-pickup').classList.contains('border-primary');
+        const pickupSelected = document.getElementById('payment-pickup') ? document.getElementById('payment-pickup').classList.contains('border-primary') : false;
 
         if (!pickupSelected && !selectedAddress) {
             showToast('Please select a shipping address', 'error');
