@@ -133,7 +133,14 @@
             document.getElementById('info-phone').value = currentUser.phone ? currentUser.phone.replace('+962', '').trim().replace(/^0/, '') : '';
 
             const genderVal = currentUser.gender || 'Not specified';
-            document.getElementById('info-gender-text').textContent = genderVal;
+            const isAr = localStorage.getItem('site_language') === 'ar';
+            let displayGender = genderVal;
+            if (isAr) {
+                if (genderVal.toLowerCase() === 'male') displayGender = 'ذكر';
+                else if (genderVal.toLowerCase() === 'female') displayGender = 'أنثى';
+                else if (genderVal === 'Not specified') displayGender = 'غير محدد';
+            }
+            document.getElementById('info-gender-text').textContent = displayGender;
 
             const iconEl = document.getElementById('info-gender-icon');
             if (genderVal.toLowerCase() === 'male') {
@@ -144,6 +151,7 @@
                 iconEl.textContent = 'person';
             }
         }
+        if (typeof window.applyTranslations === 'function') window.applyTranslations();
     });
 </script>
 

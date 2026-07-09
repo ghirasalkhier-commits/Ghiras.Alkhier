@@ -167,6 +167,7 @@
                 console.error('Error loading categories', e);
                 container.innerHTML = '<p class="col-span-3 text-red-500 text-sm py-4 text-center">Failed to load categories.</p>';
             }
+            if (typeof window.applyTranslations === 'function') window.applyTranslations();
         }
 
 
@@ -232,6 +233,7 @@
             } catch(e) {
                 console.error('Failed to load featured products', e);
             }
+            if (typeof window.applyTranslations === 'function') window.applyTranslations();
         }
         
         // When loaded dynamically via fetch in index.html, DOMContentLoaded might have already fired

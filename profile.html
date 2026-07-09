@@ -57,12 +57,12 @@
 <!-- Header Section -->
 <div class="relative w-full bg-[#e8ebe6] pt-12 pb-8 px-6 rounded-b-4xl">
     <!-- Top Bar -->
-    <div class="flex items-center justify-between mb-6 relative">
+    <div class="flex items-center justify-between mb-6 relative" dir="ltr">
         <button class="flex h-12 w-12 items-center justify-center rounded-full bg-white text-primary hover:bg-white/80 transition-colors shadow-soft" onclick="window.history.back()">
             <span class="material-symbols-outlined">arrow_back</span>
         </button>
         
-        <button onclick="window.location.href='edit-profile.html'" class="flex h-12 w-12 items-center justify-center rounded-full bg-white text-primary font-semibold hover:bg-white/80 transition-colors shadow-soft ml-auto">
+        <button onclick="window.location.href='edit-profile.html'" class="flex h-12 w-12 items-center justify-center rounded-full bg-white text-primary font-semibold hover:bg-white/80 transition-colors shadow-soft">
             <span class="material-symbols-outlined">edit</span>
         </button>
     </div>
@@ -325,23 +325,29 @@
             });
 
             if (gardenCount) {
+                const isAr = localStorage.getItem('site_language') === 'ar';
                 if (gardenItems.length === 0) {
-                    gardenCount.textContent = 'Plant your first seed today!';
+                    gardenCount.textContent = isAr ? 'ازرع بذرتك الأولى اليوم!' : 'Plant your first seed today!';
                 } else {
-                    gardenCount.textContent = `You have ${gardenItems.length} plant${gardenItems.length !== 1 ? 's' : ''} growing`;
+                    gardenCount.textContent = isAr ? `لديك ${gardenItems.length} نباتات تنمو` : `You have ${gardenItems.length} plant${gardenItems.length !== 1 ? 's' : ''} growing`;
                 }
             }
             
             if (gardenList) {
+                const isAr = localStorage.getItem('site_language') === 'ar';
                 if (gardenItems.length === 0) {
+                    const title = isAr ? 'حديقتك فارغة' : 'Your Garden is Empty';
+                    const desc = isAr ? 'كل حديقة رائعة تبدأ ببذرة واحدة. اشترِ نباتاً وشاهد حديقتك تنمو هنا!' : 'Every great garden starts with a single seed. Buy a plant and watch your garden grow here!';
+                    const btn = isAr ? 'ابدأ الزراعة' : 'Start Growing';
+                    
                     gardenList.innerHTML = `
                     <div class="bg-white p-6 rounded-3xl shadow-soft text-center border border-surface-dim">
                         <div class="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-3">
                             <span class="text-3xl">🌱</span>
                         </div>
-                        <h2 class="text-lg font-bold text-text mb-1">Your Garden is Empty</h2>
-                        <p class="text-text-muted mb-4 text-sm leading-relaxed">Every great garden starts with a single seed. Buy a plant and watch your garden grow here!</p>
-                        <button onclick="window.location.href='product.html'" class="bg-primary text-white font-bold py-2 px-6 rounded-full shadow-soft hover:bg-primary/90 transition-colors text-sm">Start Growing</button>
+                        <h2 class="text-lg font-bold text-text mb-1">${title}</h2>
+                        <p class="text-text-muted mb-4 text-sm leading-relaxed">${desc}</p>
+                        <button onclick="window.location.href='product.html'" class="bg-primary text-white font-bold py-2 px-6 rounded-full shadow-soft hover:bg-primary/90 transition-colors text-sm">${btn}</button>
                     </div>`;
                     if (seeAllGardenBtn) seeAllGardenBtn.classList.add('hidden');
                 } else {
@@ -374,14 +380,18 @@
             // --- END MY GARDEN LOGIC ---
 
             if (orders.length === 0) {
+                const isAr = localStorage.getItem('site_language') === 'ar';
+                const noOrders = isAr ? 'لا توجد طلبات بعد' : 'No orders yet';
+                const orderHistory = isAr ? 'سيظهر سجل طلباتك هنا.' : 'Your order history will appear here.';
+                const startShopping = isAr ? 'ابدأ التسوق' : 'Start Shopping';
                 list.innerHTML = `
                     <div class="bg-white p-6 rounded-3xl shadow-soft text-center border border-surface-dim">
                         <div class="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-3">
                             <span class="material-symbols-outlined text-[32px]">package_2</span>
                         </div>
-                        <h2 class="text-lg font-bold text-text mb-1">No orders yet</h2>
-                        <p class="text-text-muted mb-4 text-sm">Your order history will appear here.</p>
-                        <button onclick="window.location.href='product.html'" class="bg-primary text-white font-bold py-2 px-6 rounded-full shadow-soft hover:bg-primary/90 transition-colors text-sm">Start Shopping</button>
+                        <h2 class="text-lg font-bold text-text mb-1">${noOrders}</h2>
+                        <p class="text-text-muted mb-4 text-sm">${orderHistory}</p>
+                        <button onclick="window.location.href='product.html'" class="bg-primary text-white font-bold py-2 px-6 rounded-full shadow-soft hover:bg-primary/90 transition-colors text-sm">${startShopping}</button>
                     </div>
                 `;
             } else {
@@ -444,6 +454,7 @@
             console.error("Error loading orders", e);
             document.getElementById('profile-orders-list').innerHTML = '<p class="text-center text-text-muted py-4">Error loading orders.</p>';
         }
+        if (typeof window.applyTranslations === 'function') window.applyTranslations();
     });
 
     // Delete Account Logic

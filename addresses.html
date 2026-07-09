@@ -147,6 +147,7 @@
     let editingAddressId = null;
 
     document.addEventListener('DOMContentLoaded', () => {
+        if (typeof window.applyTranslations === 'function') window.applyTranslations();
         fetchUserAddresses();
     });
 
@@ -171,7 +172,10 @@
         container.innerHTML = '';
         
         if (addresses.length === 0) {
-            container.innerHTML = '<p class="text-center text-text-muted text-sm py-12">No saved addresses found.</p>';
+            const isAr = localStorage.getItem('site_language') === 'ar';
+            const emptyText = isAr ? 'لا توجد عناوين محفوظة.' : 'No saved addresses found.';
+            container.innerHTML = `<p class="text-center text-text-muted text-sm py-12">${emptyText}</p>`;
+            if (typeof window.applyTranslations === 'function') window.applyTranslations();
             return;
         }
 
@@ -202,6 +206,8 @@
             `;
             container.innerHTML += html;
         });
+
+        if (typeof window.applyTranslations === 'function') window.applyTranslations();
     }
 
     function openNewAddressModal() {

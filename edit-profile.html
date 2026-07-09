@@ -197,6 +197,8 @@
     let hasCustomPhoto = false;
 
     document.addEventListener('DOMContentLoaded', async () => {
+        if (typeof window.applyTranslations === 'function') window.applyTranslations();
+        
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         if (!currentUser) return;
         
@@ -497,7 +499,7 @@
 
     function selectGender(value, text) {
         document.getElementById('edit-gender').value = value;
-        document.getElementById('gender-selected-text').textContent = text;
+        document.getElementById('gender-selected-text').textContent = typeof window.t === 'function' ? window.t(text) : text;
         
         const mainIcon = document.getElementById('main-gender-icon');
         if (value === 'male') {

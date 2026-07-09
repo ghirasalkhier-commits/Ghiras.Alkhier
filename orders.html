@@ -111,14 +111,24 @@
         filteredOrders.sort((a, b) => b.id - a.id);
 
         if (filteredOrders.length === 0) {
+            const isAr = localStorage.getItem('site_language') === 'ar';
+            const noOrders = isAr ? 'لا توجد طلبات' : 'No orders found';
+            let noType = `You have no ${currentTab} orders.`;
+            if (isAr) {
+                if (currentTab === 'active') noType = 'ليس لديك طلبات نشطة.';
+                else if (currentTab === 'completed') noType = 'ليس لديك طلبات مكتملة.';
+                else if (currentTab === 'cancelled') noType = 'ليس لديك طلبات ملغاة.';
+            }
+            const startShopping = isAr ? 'ابدأ التسوق' : 'Start Shopping';
+            
             list.innerHTML = `
                 <div class="bg-white p-8 rounded-4xl shadow-soft text-center border border-surface-dim mt-8">
                     <div class="w-20 h-20 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-4">
                         <span class="material-symbols-outlined text-[40px]">package_2</span>
                     </div>
-                    <h2 class="text-xl font-bold text-text mb-2">No orders found</h2>
-                    <p class="text-text-muted mb-6 text-sm">You have no ${currentTab} orders.</p>
-                    <button onclick="window.location.href='product.html'" class="bg-primary text-white font-bold py-3 px-8 rounded-full shadow-soft hover:bg-primary/90 transition-colors">Start Shopping</button>
+                    <h2 class="text-xl font-bold text-text mb-2">${noOrders}</h2>
+                    <p class="text-text-muted mb-6 text-sm">${noType}</p>
+                    <button onclick="window.location.href='product.html'" class="bg-primary text-white font-bold py-3 px-8 rounded-full shadow-soft hover:bg-primary/90 transition-colors">${startShopping}</button>
                 </div>
             `;
             return;
@@ -178,6 +188,7 @@
             </div>
             `;
         }).join('');
+        if (typeof window.applyTranslations === 'function') window.applyTranslations();
     }
 
     document.addEventListener('DOMContentLoaded', async () => {

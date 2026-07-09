@@ -417,12 +417,15 @@
                 }
 
                 if (filtered.length === 0) {
+                    const isAr = localStorage.getItem('site_language') === 'ar';
+                    const noProdText = isAr ? 'لم نتمكن من العثور على أي منتجات تطابق بحثك.' : 'We couldn\'t find any products matching your search.';
                     grid.innerHTML = `
                         <div class="col-span-full text-center py-12">
                             <span class="material-symbols-outlined text-4xl text-text-muted mb-2">sentiment_dissatisfied</span>
-                            <p class="text-text-muted text-sm">We couldn't find any products matching your search.</p>
+                            <p class="text-text-muted text-sm">${noProdText}</p>
                         </div>
                     `;
+                    if (typeof window.applyTranslations === 'function') window.applyTranslations();
                     return;
                 }
 
@@ -502,6 +505,7 @@
                         </div>
                     </article>
                 `}).join('');
+                if (typeof window.applyTranslations === 'function') window.applyTranslations();
             }
 
             async function loadShop() {
@@ -525,7 +529,8 @@
                         const clearBtn = document.getElementById('clear-filter-btn');
                         if (clearBtn) clearBtn.classList.remove('hidden');
                         const titleEl = document.getElementById('shop-products-title');
-                        if (titleEl) titleEl.textContent = `Products in ${selectedCategory}`;
+                        const isAr = localStorage.getItem('site_language') === 'ar';
+                        if (titleEl) titleEl.textContent = isAr ? `منتجات ${selectedCategory}` : `Products in ${selectedCategory}`;
                     }
 
                     renderShopCategories();
@@ -570,6 +575,7 @@
                 <img alt="${p.name}" class="w-full h-full object-cover mix-blend-multiply" src="${heroImage}" />
             `;
 
+            const isAr = localStorage.getItem('site_language') === 'ar';
             let formattedWatering = p.watering;
             if (p.watering && p.watering.includes('|')) {
                 const parts = p.watering.split('|');
@@ -578,7 +584,14 @@
                     const period = parts[1].toLowerCase();
                     let unit = period;
                     if (period.endsWith('s')) unit = period.slice(0, -1);
-                    formattedWatering = count + ' time' + (count > 1 ? 's' : '') + ' each ' + unit;
+                    
+                    if (isAr) {
+                        let arUnit = unit === 'day' ? 'يوم' : unit === 'week' ? 'أسبوع' : unit === 'month' ? 'شهر' : 'سنة';
+                        let timesStr = count === 1 ? 'مرة واحدة' : count === 2 ? 'مرتين' : count + ' مرات';
+                        formattedWatering = timesStr + ' كل ' + arUnit;
+                    } else {
+                        formattedWatering = count + ' time' + (count > 1 ? 's' : '') + ' each ' + unit;
+                    }
                 }
             }
 
@@ -610,17 +623,18 @@
                 ${formattedWatering ? `
                 <!-- Watering -->
                 <div class="space-y-3 mb-6 bg-blue-50 p-5 rounded-3xl border border-blue-200">
-                    <h2 class="text-base font-bold text-blue-600 flex items-center gap-2"><span class="material-symbols-outlined text-blue-500">water_drop</span> Watering Frequency</h2>
+                    <h2 class="text-base font-bold text-blue-600 flex items-center gap-2"><span class="material-symbols-outlined text-blue-500">water_drop</span> ${isAr ? 'معدل الري' : 'Watering Frequency'}</h2>
                     <p class="text-blue-900 leading-relaxed text-sm whitespace-pre-wrap font-medium">${formattedWatering}</p>
                 </div>
                 ` : ''}
 
                 <!-- Description -->
                 <div class="space-y-4 mb-8 bg-white p-6 rounded-4xl shadow-soft border border-surface-dim">
-                    <h2 class="text-lg font-bold text-text">About this product</h2>
+                    <h2 class="text-lg font-bold text-text">${isAr ? 'عن هذا المنتج' : 'About this product'}</h2>
                     <p class="text-gray-800 font-medium leading-relaxed text-base whitespace-pre-wrap">${displayDesc}</p>
                 </div>
             `;
+            if (typeof window.applyTranslations === 'function') window.applyTranslations();
 
             // Override Add to Cart button logic
             window.addToCartWithQty = function() {
