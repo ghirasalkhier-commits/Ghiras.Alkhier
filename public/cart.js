@@ -27,13 +27,13 @@ const Cart = {
 
         if (existingItem) {
             if (product.stock !== undefined && existingItem.quantity + 1 > product.stock) {
-                this.showToast('Sorry, out of stock!', true);
+                this.showToast(typeof window.t === 'function' ? window.t('Sorry, out of stock!') : 'Sorry, out of stock!', true);
                 return;
             }
             existingItem.quantity += 1;
         } else {
             if (product.stock !== undefined && product.stock < 1) {
-                this.showToast('Sorry, this product is currently out of stock!', true);
+                this.showToast(typeof window.t === 'function' ? window.t('Sorry, this product is currently out of stock!') : 'Sorry, this product is currently out of stock!', true);
                 return;
             }
             items.push({
@@ -127,7 +127,7 @@ const Cart = {
 
         if (item) {
             if (change > 0 && item.stock !== undefined && item.quantity + change > item.stock) {
-                this.showToast('Sorry, out of stock!', true);
+                this.showToast(typeof window.t === 'function' ? window.t('Sorry, out of stock!') : 'Sorry, out of stock!', true);
                 return;
             }
             item.quantity += change;

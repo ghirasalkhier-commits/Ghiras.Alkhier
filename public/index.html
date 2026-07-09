@@ -223,8 +223,8 @@
                         <div class="flex-1">
                             <h4 class="font-bold text-text text-lg leading-tight mb-1">${displayName}</h4>
                             <p class="text-[10px] text-text-muted line-clamp-2 mb-2">${displayDesc || ''}</p>
-                            <div class="flex items-center justify-between">
-                                <span class="font-bold text-primary">JOD ${p.price.toFixed(2)}</span>
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="font-bold text-primary whitespace-nowrap">${(typeof window.t === 'function' ? window.t('JOD') : 'JOD')} ${p.price.toFixed(2)}</span>
                                 <span class="material-symbols-outlined text-primary bg-primary/10 rounded-full p-1 text-[16px]">arrow_forward</span>
                             </div>
                         </div>

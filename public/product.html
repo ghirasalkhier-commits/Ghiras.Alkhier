@@ -306,12 +306,21 @@
                 renderShopProducts();
             };
 
+            function getShopTitle(categoryName) {
+                const currentLanguage = localStorage.getItem('site_language');
+                const isArabic = currentLanguage === 'ar' || document.documentElement.dir === 'rtl';
+                if (!categoryName) return isArabic ? 'جميع النباتات والمنتجات' : 'All Plants and Products';
+                const catObj = allCategories.find(c => c.name === categoryName);
+                const displayName = catObj && window.getLangField ? window.getLangField(catObj, 'name') : categoryName;
+                return isArabic ? `منتجات ${displayName}` : `Products in ${displayName}`;
+            }
+
             window.clearCategoryFilter = function() {
                 selectedCategory = null;
                 renderShopCategories();
                 renderShopProducts();
                 document.getElementById('clear-filter-btn').classList.add('hidden');
-                document.getElementById('shop-products-title').textContent = 'All Plants and Products';
+                document.getElementById('shop-products-title').textContent = getShopTitle(null);
             };
 
             window.filterByCategory = function(categoryName) {
@@ -326,10 +335,10 @@
                 const clearBtn = document.getElementById('clear-filter-btn');
                 if (selectedCategory) {
                     clearBtn.classList.remove('hidden');
-                    document.getElementById('shop-products-title').textContent = `Products in ${selectedCategory}`;
+                    document.getElementById('shop-products-title').textContent = getShopTitle(selectedCategory);
                 } else {
                     clearBtn.classList.add('hidden');
-                    document.getElementById('shop-products-title').textContent = 'All Plants and Products';
+                    document.getElementById('shop-products-title').textContent = getShopTitle(null);
                 }
             };
 
@@ -496,8 +505,8 @@
                         <div class="px-2">
                             <h4 class="font-extrabold text-2xl md:text-3xl mb-1 text-primary leading-snug cursor-pointer" onclick="window.location.href='product.html?id=${p.id}'">${displayName}</h4>
                             <p class="text-text-muted text-xs leading-relaxed mb-4 line-clamp-2">${displayDesc}</p>
-                            <div class="flex items-center justify-between">
-                                <span class="text-primary font-bold text-base">JOD ${p.price.toFixed(2)}</span>
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="text-primary font-bold text-base whitespace-nowrap">${(typeof window.t === 'function' ? window.t('JOD') : 'JOD')} ${p.price.toFixed(2)}</span>
                                 <button onclick='Cart.add({ id: ${p.id}, name: "${p.name.replace(/'/g, "\\'")}", name_ar: "${(p.name_ar || '').replace(/'/g, "\\'")}", price: ${p.price}, image: "${p.firstImage}", stock: ${p.stock} }, event)' aria-label="Add ${displayName} to cart" class="min-w-[44px] min-h-[44px] flex items-center justify-center bg-surface-dim rounded-full text-text hover:bg-primary-light hover:text-primary transition-colors z-20 relative">
                                     <span class="material-symbols-outlined text-[18px]">add</span>
                                 </button>
@@ -558,7 +567,7 @@
                 const addToCartBtn = document.querySelector('button[onclick="addToCartWithQty()"]');
                 if (addToCartBtn) {
                     addToCartBtn.disabled = true;
-                    addToCartBtn.innerHTML = 'Out of Stock';
+                    addToCartBtn.innerHTML = typeof window.t === 'function' ? window.t('Out of Stock') : 'Out of Stock';
                     addToCartBtn.classList.add('opacity-50', 'cursor-not-allowed');
                 }
             }
@@ -601,12 +610,12 @@
             // Set Details
             document.getElementById('product-container').innerHTML = `
                 <div class="mb-6 px-2">
-                    <div class="flex justify-between items-center mb-2">
-                        <div class="space-y-1.5 flex-1 pr-4">
-                            <h1 class="text-3xl font-black text-text leading-tight">${displayName}</h1>
+                    <div class="flex flex-wrap justify-between items-start gap-4 mb-2">
+                        <div class="space-y-1.5 flex-1 min-w-[200px] pr-4">
+                            <h1 class="text-3xl font-black text-text leading-tight break-words">${displayName}</h1>
                         </div>
                         <div class="flex flex-col items-end shrink-0">
-                            <span class="text-2xl font-black text-primary">JOD ${p.price.toFixed(2)}</span>
+                            <span class="text-2xl font-black text-primary whitespace-nowrap">${(typeof window.t === 'function' ? window.t('JOD') : 'JOD')} ${p.price.toFixed(2)}</span>
                         </div>
                     </div>
                 </div>
