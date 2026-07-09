@@ -917,7 +917,11 @@ app.delete('/api/categories/:id', authMiddleware, adminMiddleware, (req, res) =>
 app.get('/api/admin/orders', authMiddleware, adminMiddleware, (req, res) => {
     db.all(`SELECT * FROM orders ORDER BY created_at DESC`, [], (err, rows) => {
         if (err) return res.status(500).json({ error: err.message });
-        res.json(rows);
+        const normalized = (rows || []).map(r => ({
+            ...r,
+            created_at: r.created_at instanceof Date ? r.created_at.toISOString() : (r.created_at || '')
+        }));
+        res.json(normalized);
     });
 });
 
@@ -986,7 +990,11 @@ app.get('/api/orders/:email', authMiddleware, (req, res) => {
     const email = req.user.email; // Enforce token email
     db.all(`SELECT * FROM orders WHERE user_email=? ORDER BY created_at DESC`, [email], (err, rows) => {
         if (err) return res.status(500).json({ error: err.message });
-        res.json(rows);
+        const normalized = (rows || []).map(r => ({
+            ...r,
+            created_at: r.created_at instanceof Date ? r.created_at.toISOString() : (r.created_at || '')
+        }));
+        res.json(normalized);
     });
 });
 
