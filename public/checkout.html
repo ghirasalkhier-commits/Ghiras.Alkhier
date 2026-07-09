@@ -211,7 +211,7 @@
                             <span class="material-symbols-outlined">contact_phone</span>
                         </div>
                         <div class="flex flex-col justify-center">
-                            <p class="text-[10px] uppercase font-bold text-text-muted mb-0.5 tracking-wider" data-i18n="contact_info">Contact Info / معلومات التواصل</p>
+                            <p class="text-[10px] uppercase font-bold text-text-muted mb-0.5 tracking-wider">CONTACT INFO</p>
                             <p id="user-name" class="text-text text-base font-bold"></p>
                             <p id="user-phone" class="text-text-muted text-sm leading-relaxed mt-0.5"></p>
                         </div>
@@ -409,7 +409,8 @@
         document.getElementById('checkout-step-2').classList.remove('hidden');
         document.getElementById('footer-step-2').classList.remove('hidden');
 
-        document.getElementById('header-title').innerText = 'Checkout';
+        const isAr = localStorage.getItem('site_language') === 'ar';
+        document.getElementById('header-title').innerText = isAr ? 'إتمام الطلب' : 'Checkout';
         document.getElementById('progress-line').style.width = '100%';
         
         const step1Icon = document.getElementById('step-1-icon');
@@ -437,7 +438,8 @@
         document.getElementById('checkout-step-2').classList.add('hidden');
         document.getElementById('footer-step-2').classList.add('hidden');
 
-        document.getElementById('header-title').innerText = 'Delivery Address';
+        const isAr = localStorage.getItem('site_language') === 'ar';
+        document.getElementById('header-title').innerText = isAr ? 'عنوان التوصيل' : 'Delivery Address';
         document.getElementById('progress-line').style.width = '50%';
         
         const step1Icon = document.getElementById('step-1-icon');

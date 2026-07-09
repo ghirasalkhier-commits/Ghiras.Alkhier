@@ -167,6 +167,7 @@
                 console.error('Error loading categories', e);
                 container.innerHTML = '<p class="col-span-3 text-red-500 text-sm py-4 text-center">Failed to load categories.</p>';
             }
+            if (typeof window.applyTranslations === 'function') window.applyTranslations();
         }
 
 
@@ -232,6 +233,7 @@
             } catch(e) {
                 console.error('Failed to load featured products', e);
             }
+            if (typeof window.applyTranslations === 'function') window.applyTranslations();
         }
         
         // When loaded dynamically via fetch in index.html, DOMContentLoaded might have already fired
@@ -376,29 +378,35 @@
     // lucide.createIcons();
 </script>
 <!-- Language Selection Modal (Onboarding) -->
-<div id="language-onboarding-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/40 backdrop-blur-sm transition-opacity duration-300 opacity-0">
-    <div class="bg-surface w-[90%] max-w-sm rounded-3xl p-6 shadow-2xl transform scale-95 transition-transform duration-300 relative overflow-hidden" id="lang-modal-content">
+<div id="language-onboarding-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-text/50 backdrop-blur-md transition-opacity duration-500 opacity-0">
+    <div class="bg-surface/90 backdrop-blur-xl w-[92%] max-w-sm rounded-[32px] p-8 shadow-[0_20px_40px_rgba(0,0,0,0.1)] border border-white/20 transform scale-95 transition-all duration-500 relative overflow-hidden" id="lang-modal-content">
         <!-- Decorative bg -->
-        <div class="absolute -top-20 -right-20 w-40 h-40 bg-primary/10 rounded-full blur-2xl pointer-events-none"></div>
-        <div class="absolute -bottom-20 -left-20 w-40 h-40 bg-primary/5 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="absolute -top-10 -right-10 w-48 h-48 bg-primary/20 rounded-full blur-[40px] pointer-events-none"></div>
+        <div class="absolute -bottom-10 -left-10 w-48 h-48 bg-primary-light/20 rounded-full blur-[40px] pointer-events-none"></div>
         
         <div class="relative z-10 text-center">
-            <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary mx-auto mb-4">
-                <span class="material-symbols-outlined text-[32px]">language</span>
+            <div class="w-20 h-20 rounded-3xl bg-gradient-to-br from-primary-light/20 to-primary/10 flex items-center justify-center text-primary mx-auto mb-6 shadow-inner border border-white/50 relative overflow-hidden">
+                <span class="material-symbols-outlined text-[40px] relative z-10">language</span>
+                <div class="absolute inset-0 bg-white/20 animate-pulse"></div>
             </div>
-            <h3 class="text-xl font-bold text-text mb-2 tracking-tight">Choose your language<br><span class="text-lg font-bold font-['Tajawal']" dir="rtl">اختر لغتك</span></h3>
-            <p class="text-sm text-text-muted mb-8 leading-relaxed">
-                You can always change this later in your profile.<br>
-                <span class="text-[13px] font-['Tajawal']" dir="rtl">يمكنك تغيير هذا لاحقاً من صفحة البروفايل.</span>
+            
+            <h3 class="text-2xl font-extrabold text-text mb-3 tracking-tight">
+                Welcome!<br>
+                <span class="text-xl font-black font-['Tajawal'] text-primary" dir="rtl">أهلاً بك في غراس الخير</span>
+            </h3>
+            
+            <p class="text-[13px] text-text-muted mb-8 leading-relaxed font-medium">
+                Please select your preferred language.<br>
+                <span class="text-[14px] font-['Tajawal']" dir="rtl">الرجاء اختيار لغتك المفضلة.</span>
             </p>
             
-            <div class="flex flex-col gap-3">
-                <button onclick="selectOnboardingLanguage('ar')" class="w-full bg-primary hover:bg-primary/90 text-white py-4 rounded-2xl font-bold shadow-ambient transition-all active:scale-[0.98] flex items-center justify-center gap-3">
-                    <span class="font-['Tajawal'] text-lg">العربية</span>
-                    <span class="text-primary-light text-sm font-normal">Arabic</span>
+            <div class="flex flex-col gap-3" id="lang-buttons-container">
+                <button onclick="selectOnboardingLanguage('ar', this)" class="group w-full bg-primary hover:bg-primary/90 text-white py-4 px-6 rounded-2xl font-bold shadow-[0_8px_20px_rgba(30,136,70,0.25)] transition-all duration-300 active:scale-[0.97] flex items-center justify-between border border-primary-light/30">
+                    <span class="font-['Tajawal'] text-xl">العربية</span>
+                    <span class="text-white/70 text-sm font-medium">Arabic</span>
                 </button>
-                <button onclick="selectOnboardingLanguage('en')" class="w-full bg-surface-dim hover:bg-surface-dim/80 text-text py-4 rounded-2xl font-bold transition-colors active:scale-[0.98] border border-gray-200 flex items-center justify-center gap-3">
-                    <span>English</span>
+                <button onclick="selectOnboardingLanguage('en', this)" class="group w-full bg-white hover:bg-surface-dim text-text py-4 px-6 rounded-2xl font-bold shadow-sm transition-all duration-300 active:scale-[0.97] border border-surface-dim/50 flex items-center justify-between">
+                    <span class="text-lg">English</span>
                     <span class="text-text-muted text-sm font-normal font-['Tajawal']">الإنجليزية</span>
                 </button>
             </div>
@@ -415,26 +423,41 @@
             const modal = document.getElementById('language-onboarding-modal');
             const content = document.getElementById('lang-modal-content');
             modal.classList.remove('hidden');
+            // Using a slight delay to trigger the CSS transition
             setTimeout(() => {
                 modal.classList.remove('opacity-0');
                 content.classList.remove('scale-95');
+                content.classList.add('scale-100');
             }, 50);
         }
     });
 
-    function selectOnboardingLanguage(lang) {
+    function selectOnboardingLanguage(lang, btnElement) {
+        // Prevent double clicks
+        if (btnElement.classList.contains('pointer-events-none')) return;
+        
+        // Disable all buttons in the container
+        const container = document.getElementById('lang-buttons-container');
+        container.style.pointerEvents = 'none';
+        
+        // Visual feedback on the clicked button
+        btnElement.classList.add('opacity-80', 'scale-95');
+        
         localStorage.setItem('site_language', lang);
         localStorage.setItem('language_selected', 'true');
         
         const modal = document.getElementById('language-onboarding-modal');
         const content = document.getElementById('lang-modal-content');
+        
+        // Smooth exit animation
         modal.classList.add('opacity-0');
-        content.classList.add('scale-95');
+        content.classList.remove('scale-100');
+        content.classList.add('scale-95', 'translate-y-4');
         
         setTimeout(() => {
             modal.classList.add('hidden');
             window.location.reload();
-        }, 300);
+        }, 400);
     }
 </script>
 </body>

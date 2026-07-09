@@ -170,10 +170,12 @@ const Cart = {
         const items = this.getItems();
 
         if (items.length === 0) {
+            const isAr = localStorage.getItem('site_language') === 'ar';
+            const emptyText = isAr ? 'سلتك فارغة' : 'Your cart is empty';
             cartContent.innerHTML = `
                 <div class="flex flex-col items-center justify-center h-full text-slate-500">
                     <span class="material-symbols-outlined text-4xl mb-2">shopping_bag</span>
-                    <p>Your cart is empty</p>
+                    <p>${emptyText}</p>
                 </div>
             `;
             this.updateTotals(items);
