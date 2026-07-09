@@ -145,17 +145,8 @@
             const isAr = localStorage.getItem('site_language') === 'ar';
             const t = (key) => typeof window.t === 'function' ? window.t(key) : key;
 
-            // Fix date - handle both string and non-string created_at
-            let dateDisplay = '';
-            try {
-                const raw = o.created_at;
-                if (typeof raw === 'string') {
-                    dateDisplay = new Date(raw.replace(' ', 'T') + 'Z').toLocaleString();
-                } else if (raw) {
-                    dateDisplay = new Date(raw).toLocaleString();
-                }
-                if (dateDisplay === 'Invalid Date') dateDisplay = String(raw || '');
-            } catch(e) { dateDisplay = ''; }
+            // Fix date
+            const dateDisplay = window.formatDate ? window.formatDate(o.created_at) : String(o.created_at || '');
 
             // Items HTML with images
             const itemsHtml = data.items.map(i => {

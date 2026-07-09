@@ -316,9 +316,7 @@
             const completedOrders = orders.filter(o => o.status === 'completed');
             completedOrders.forEach(o => {
                 const data = JSON.parse(o.order_data);
-                let dateStr1 = (o.created_at && typeof o.created_at === 'string') ? o.created_at.replace(' ', 'T') + 'Z' : o.created_at;
-                let dateObj1 = new Date(dateStr1);
-                const orderDate = isNaN(dateObj1) ? o.created_at : dateObj1.toLocaleDateString(undefined, { year: 'numeric', month: 'short' });
+                const orderDate = window.formatDate ? window.formatDate(o.created_at, 'short') : String(o.created_at || '');
                 data.items.forEach(item => {
                     gardenItems.push({
                         id: item.id,
@@ -432,16 +430,7 @@
                     }).join('');
                     
                     // Fix date
-                    let dateDisplay = '';
-                    try {
-                        const raw = o.created_at;
-                        if (typeof raw === 'string') {
-                            dateDisplay = new Date(raw.replace(' ', 'T') + 'Z').toLocaleString();
-                        } else if (raw) {
-                            dateDisplay = new Date(raw).toLocaleString();
-                        }
-                        if (dateDisplay === 'Invalid Date') dateDisplay = String(raw || '');
-                    } catch(e) { dateDisplay = ''; }
+                    const dateDisplay = window.formatDate ? window.formatDate(o.created_at) : String(o.created_at || '');
                     
                     let statusText = o.status;
                     let statusClass = 'bg-surface-dim text-text-muted';

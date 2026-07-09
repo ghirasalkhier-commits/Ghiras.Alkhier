@@ -1,4 +1,34 @@
 
+// Global date formatter - handles ISO strings, SQLite strings, Date objects, timestamps
+window.formatDate = function(raw, options) {
+    if (!raw) return '';
+    try {
+        let d;
+        if (raw instanceof Date) {
+            d = raw;
+        } else if (typeof raw === 'number') {
+            d = new Date(raw);
+        } else if (typeof raw === 'string') {
+            // Already ISO format like 2026-07-09T02:54:47.722Z
+            if (raw.includes('T')) {
+                d = new Date(raw);
+            } else {
+                // SQLite format like 2026-07-09 02:54:47
+                d = new Date(raw.replace(' ', 'T') + 'Z');
+            }
+        } else {
+            return '';
+        }
+        if (isNaN(d.getTime())) return '';
+        const isAr = localStorage.getItem('site_language') === 'ar';
+        const locale = isAr ? 'ar-JO' : 'en-JO';
+        if (options === 'short') {
+            return d.toLocaleDateString(locale, { year: 'numeric', month: 'short' });
+        }
+        return d.toLocaleDateString(locale, { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    } catch(e) { return ''; }
+};
+
 // Force Login Check
 (function() {
     var currentPage = window.location.pathname.split('/').pop();

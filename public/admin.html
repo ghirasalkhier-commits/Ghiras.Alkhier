@@ -788,16 +788,7 @@
 
         list.innerHTML = filteredOrders.map(o => {
             const data = JSON.parse(o.order_data);
-            let dateDisplay = '';
-            try {
-                const raw = o.created_at;
-                if (typeof raw === 'string') {
-                    dateDisplay = new Date(raw.replace(' ', 'T') + 'Z').toLocaleString();
-                } else if (raw) {
-                    dateDisplay = new Date(raw).toLocaleString();
-                }
-                if (dateDisplay === 'Invalid Date') dateDisplay = String(raw || '');
-            } catch(e) { dateDisplay = ''; }
+            const dateDisplay = window.formatDate ? window.formatDate(o.created_at) : String(o.created_at || '');
             
             let statusText = o.status;
             let statusClass = 'bg-surface-dim text-text-muted';
@@ -1099,16 +1090,7 @@
                         </div>
                     ` : '';
 
-                    let modalDate = '';
-                    try {
-                        const raw = o.created_at;
-                        if (typeof raw === 'string') {
-                            modalDate = new Date(raw.replace(' ', 'T') + 'Z').toLocaleString();
-                        } else if (raw) {
-                            modalDate = new Date(raw).toLocaleString();
-                        }
-                        if (modalDate === 'Invalid Date') modalDate = String(raw || '');
-                    } catch(e) { modalDate = ''; }
+                    const modalDate = window.formatDate ? window.formatDate(o.created_at) : String(o.created_at || '');
 
                     let statusText = o.status;
                     let statusClass = 'text-text-muted';
