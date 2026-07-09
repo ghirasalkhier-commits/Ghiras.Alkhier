@@ -398,7 +398,8 @@
 
         // Populate Selected Address in Step 2
         document.getElementById('selected-addr-building').innerText = selectedAddress.label && selectedAddress.label.trim() !== '' ? selectedAddress.label : selectedAddress.building;
-        document.getElementById('selected-addr-floor').innerText = selectedAddress.floor || selectedAddress.details || 'No additional details';
+        const defaultDetails = typeof window.t === 'function' ? window.t('No additional details') : 'No additional details';
+        document.getElementById('selected-addr-floor').innerText = selectedAddress.floor || selectedAddress.details || defaultDetails;
     }
 
     function goBackToStep1() {
@@ -458,7 +459,8 @@ function renderAddresses() {
         container.innerHTML = '';
         
         if (addresses.length === 0) {
-            container.innerHTML = '<p class="text-center text-text-muted text-sm py-4">No addresses found. Add one below.</p>';
+            container.innerHTML = '<p class="text-center text-text-muted text-sm py-4" data-translate="true">No addresses found. Add one below.</p>';
+            if (typeof window.applyTranslations === 'function') window.applyTranslations();
             document.getElementById('btn-continue').disabled = true;
             return;
         }
