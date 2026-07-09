@@ -52,11 +52,11 @@
     <div class="max-w-md mx-auto w-full px-6 pt-8 pb-32 space-y-6 flex-1">
 
         <!-- Header -->
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between" dir="ltr">
             <button onclick="window.location.href='profile.html'" class="w-10 h-10 rounded-full bg-white shadow-soft border border-surface-dim flex items-center justify-center hover:bg-surface-dim transition-colors">
-                <span class="material-symbols-outlined text-text">arrow_back</span>
+                <span class="material-symbols-outlined text-primary">arrow_back</span>
             </button>
-            <h1 class="text-2xl font-bold text-primary garden-title">My Garden</h1>
+            <h1 class="text-2xl font-bold text-primary garden-title" dir="auto">My Garden</h1>
             <div class="w-10"></div>
         </div>
 
@@ -132,7 +132,7 @@
             <span class="text-[10px] font-medium tracking-wide nav-home">Home</span>
         </a>
         <a href="product.html" class="flex flex-col items-center gap-1 text-text-muted hover:text-primary transition-colors">
-            <span class="material-symbols-outlined text-[24px]">grid_view</span>
+            <span class="material-symbols-outlined text-[24px]">local_florist</span>
             <span class="text-[10px] font-medium tracking-wide nav-shop">Shop</span>
         </a>
         <button onclick="toggleCart()" class="flex flex-col items-center gap-1 text-text-muted hover:text-primary transition-colors relative">
@@ -264,8 +264,6 @@
         if (isAr) {
             document.documentElement.dir = 'rtl';
             document.documentElement.lang = 'ar';
-            // Flip back arrow
-            document.querySelector('.material-symbols-outlined.text-text').textContent = 'arrow_forward';
         } else {
             document.documentElement.dir = 'ltr';
             document.documentElement.lang = 'en';

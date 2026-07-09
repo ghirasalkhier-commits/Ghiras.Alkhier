@@ -83,7 +83,7 @@ window.formatDate = function(raw, options) {
 (function() {
     var dict = {
         'Home': 'الرئيسية',
-        'Shop': 'التسوق',
+        'Shop': 'المتجر',
         'Cart': 'السلة',
         'Profile': 'حسابي',
         'Search products...': 'ابحث عن المنتجات...',
