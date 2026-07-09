@@ -529,7 +529,7 @@
                     window.location.href = 'login.html';
                 }, 800);
             } else {
-                btn.innerHTML = 'Delete';
+                btn.innerHTML = typeof window.t === 'function' ? window.t('Delete') : 'Delete';
                 btn.disabled = false;
                 btn.classList.remove('opacity-75');
 
@@ -548,7 +548,7 @@
             errorMsg.textContent = 'Server error. Please try again later.';
             errorMsg.classList.remove('hidden');
             const btn = document.getElementById('confirm-delete-btn');
-            btn.innerHTML = 'Delete';
+            btn.innerHTML = typeof window.t === 'function' ? window.t('Delete') : 'Delete';
             btn.disabled = false;
             btn.classList.remove('opacity-75');
         }

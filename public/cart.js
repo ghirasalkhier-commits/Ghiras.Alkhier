@@ -201,7 +201,7 @@ const Cart = {
                         <p class="text-xs text-slate-500 mt-1 italic">${displayDesc}</p>
                     </div>
                     <div class="flex items-end justify-between mt-2">
-                        <p class="font-bold text-primary text-lg">JOD ${item.price.toFixed(2)}</p>
+                        <p class="font-bold text-primary text-lg">${typeof window.t === 'function' ? window.t('JOD') : 'JOD'} ${item.price.toFixed(2)}</p>
                         <div class="flex items-center bg-slate-100 rounded-full p-1 h-8">
                             <button onclick="Cart.updateQuantity('${item.name.replace(/'/g, "\\'")}', -1)" class="w-7 h-full flex items-center justify-center text-slate-600 hover:bg-white rounded-full transition-colors">
                                 <span class="material-symbols-outlined text-[16px]">remove</span>

@@ -134,9 +134,9 @@
                 </div>
 
                 <div class="bg-white rounded-3xl p-5 space-y-3 shadow-soft border border-surface-dim">
-                    <div class="flex justify-between text-sm items-center">
-                        <span class="text-text-muted font-medium">Subtotal</span>
-                        <span id="subtotal-amount" class="text-text font-bold text-base">JOD 0.00</span>
+                    <div class="flex justify-between items-center">
+                        <span class="text-text-muted text-sm">Subtotal</span>
+                        <span id="subtotal-amount" class="text-text font-bold text-base"><script>document.write(typeof window.t === 'function' ? window.t('JOD') : 'JOD')</script> 0.00</span>
                     </div>
                     <div class="w-full h-px bg-surface-dim"></div>
                     <div id="shipping-row" class="flex justify-between text-sm items-center">
@@ -146,7 +146,7 @@
                             </div>
                             <span class="text-text-muted font-medium">Shipping</span>
                         </div>
-                        <span id="shipping-cost" class="text-primary font-bold text-base">JOD 5.00</span>
+                        <span id="shipping-cost" class="text-primary font-bold text-base"><script>document.write(typeof window.t === 'function' ? window.t('JOD') : 'JOD')</script> 5.00</span>
                     </div>
                 </div>
             </div>
@@ -251,8 +251,8 @@
 <footer id="footer-step-2" class="fixed bottom-0 w-full max-w-xl left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur-md border-t border-surface-dim p-5 pb-8 shadow-ambient z-30 rounded-t-4xl hidden">
     <div class="flex items-end justify-between mb-4 px-2">
         <div>
-            <p class="text-sm text-text-muted font-medium mb-1">Total Amount</p>
-            <p id="total-amount" class="text-2xl font-bold text-primary">JOD 0.00</p>
+            <p class="text-xs text-text-muted mb-1 uppercase tracking-wider font-bold">Total Amount</p>
+            <p id="total-amount" class="text-2xl font-bold text-primary"><script>document.write(typeof window.t === 'function' ? window.t('JOD') : 'JOD')</script> 0.00</p>
         </div>
     </div>
     <button class="w-full min-h-[56px] bg-primary hover:bg-primary/90 text-white font-medium rounded-full shadow-ambient active:scale-[0.98] transition-all flex items-center justify-center gap-2 group" onclick="placeOrder()">
