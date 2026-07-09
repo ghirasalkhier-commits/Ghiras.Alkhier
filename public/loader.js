@@ -261,7 +261,9 @@
         'Delivery Address': 'عنوان التوصيل',
         'Please select a delivery address first': 'الرجاء اختيار عنوان التوصيل أولاً',
         'Please log in to place an order': 'الرجاء تسجيل الدخول لإتمام الطلب',
-        'Please select a payment method': 'الرجاء اختيار طريقة الدفع'
+        'Please select a payment method': 'الرجاء اختيار طريقة الدفع',
+        'Order': 'الطلب',
+        'Purchased': 'تم الشراء في'
     };
     
     window.t = function(text) {

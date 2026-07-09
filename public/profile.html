@@ -313,11 +313,13 @@
             const completedOrders = orders.filter(o => o.status === 'completed');
             completedOrders.forEach(o => {
                 const data = JSON.parse(o.order_data);
-                const orderDate = new Date(o.created_at).toLocaleDateString(undefined, { year: 'numeric', month: 'short' });
+                let dateStr1 = o.created_at ? o.created_at.replace(' ', 'T') + 'Z' : '';
+                let dateObj1 = new Date(dateStr1);
+                const orderDate = isNaN(dateObj1) ? o.created_at : dateObj1.toLocaleDateString(undefined, { year: 'numeric', month: 'short' });
                 data.items.forEach(item => {
                     gardenItems.push({
                         id: item.id,
-                        name: item.name,
+                        name: typeof window.getLangField === 'function' ? window.getLangField(item, 'name') : item.name,
                         image: item.image || '',
                         date: orderDate
                     });
@@ -372,7 +374,7 @@
                             </div>
                             <div class="px-1">
                                 <p class="font-semibold text-text leading-tight truncate" title="${item.name}">${item.name}</p>
-                                <p class="text-xs text-text-muted">Purchased ${item.date}</p>
+                                <p class="text-xs text-text-muted">${typeof window.t === 'function' ? window.t('Purchased') : 'Purchased'} ${item.date}</p>
                             </div>
                         </div>
                         `;
@@ -408,8 +410,14 @@
                 
                 list.innerHTML = displayOrders.map(o => {
                     const data = JSON.parse(o.order_data);
-                    const items = data.items.map(i => `${i.quantity}x ${i.name}`).join('<br>');
-                    const date = new Date(o.created_at).toLocaleString();
+                    const items = data.items.map(i => {
+                        const itemName = typeof window.getLangField === 'function' ? window.getLangField(i, 'name') : i.name;
+                        return `${i.quantity}x ${itemName}`;
+                    }).join('<br>');
+                    
+                    let dateStr = o.created_at ? o.created_at.replace(' ', 'T') + 'Z' : '';
+                    let dateObj = new Date(dateStr);
+                    const date = isNaN(dateObj) ? o.created_at : dateObj.toLocaleString();
                     
                     let statusText = o.status;
                     let statusClass = 'bg-surface-dim text-text-muted';
@@ -423,7 +431,7 @@
                     <div class="bg-white p-5 rounded-3xl shadow-soft border border-surface-dim space-y-3">
                         <div class="flex justify-between items-start border-b border-surface-dim pb-3">
                             <div>
-                                <p class="text-xs text-text-muted font-medium mb-1">Order #${o.id}</p>
+                                <p class="text-xs text-text-muted font-medium mb-1">${typeof window.t === 'function' ? window.t('Order') : 'Order'} #${o.id}</p>
                                 <p class="text-sm font-bold text-text">${date}</p>
                             </div>
                             <span class="px-3 py-1 rounded-full text-xs font-bold ${statusClass}">
@@ -447,7 +455,7 @@
                         
                         <div class="flex justify-between items-center pt-3 border-t border-surface-dim">
                             <span class="text-sm text-text-muted">Total Amount</span>
-                            <p class="font-bold text-primary">JOD ${o.total_price.toFixed(2)}</p>
+                            <p class="font-bold text-primary">${typeof window.t === 'function' ? window.t('JOD') : 'JOD'} ${o.total_price.toFixed(2)}</p>
                         </div>
                     </div>
                     `;
