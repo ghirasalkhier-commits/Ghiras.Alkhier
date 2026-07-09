@@ -4,7 +4,8 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=400, user-scalable=no">
     <title>Admin Dashboard - Ghiras Alkhier</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries">
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
     <script src="purify.min.js"></script>
@@ -1136,25 +1137,92 @@
     // Init
     loadProducts();
 
-    function previewCategoryImage(input) {
-        const previewContainer = document.getElementById('category-image-preview-container');
-        const previewImg = document.getElementById('category-image-preview');
-        const placeholder = document.getElementById('category-image-placeholder');
-        
+        window.previewCategoryImage = function(input) {
         if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                previewImg.src = e.target.result;
-                previewContainer.classList.remove('hidden');
-                placeholder.classList.add('hidden');
-            }
-            reader.readAsDataURL(input.files[0]);
+            window.openCropper(input.files[0], 'category', input);
         } else {
+            const previewContainer = document.getElementById('category-image-preview-container');
+            const previewImg = document.getElementById('category-image-preview');
+            const placeholder = document.getElementById('category-image-placeholder');
             previewImg.src = '';
             previewContainer.classList.add('hidden');
             placeholder.classList.remove('hidden');
+            croppedCategoryFile = null;
         }
     }
+</script>
+
+    
+    let cropper = null;
+    let currentCropTarget = null;
+    let currentCategoryInput = null;
+    let croppedCategoryFile = null;
+
+    window.openCropper = function(file, targetType, inputEl = null) {
+        currentCropTarget = targetType;
+        currentCategoryInput = inputEl;
+        const url = URL.createObjectURL(file);
+        const image = document.getElementById('cropper-image');
+        image.src = url;
+        document.getElementById('cropper-modal').classList.remove('hidden');
+        
+        if (cropper) {
+            cropper.destroy();
+        }
+        cropper = new Cropper(image, {
+            aspectRatio: targetType === 'category' ? 1 : NaN,
+            viewMode: 1,
+            autoCropArea: 1,
+        });
+    };
+
+    window.closeCropper = function() {
+        document.getElementById('cropper-modal').classList.add('hidden');
+        if (cropper) {
+            cropper.destroy();
+            cropper = null;
+        }
+        document.getElementById('product-images').value = '';
+        if (currentCategoryInput) currentCategoryInput.value = '';
+    };
+
+    window.applyCrop = function() {
+        if (!cropper) return;
+        const canvas = cropper.getCroppedCanvas({
+            maxWidth: 1024,
+            maxHeight: 1024,
+            fillColor: '#fff'
+        });
+        
+        canvas.toBlob((blob) => {
+            const file = new File([blob], 'cropped.jpg', { type: 'image/jpeg' });
+            
+            if (currentCropTarget === 'product') {
+                selectedFiles.push(file);
+                renderPreviews();
+            } else if (currentCropTarget === 'category') {
+                croppedCategoryFile = file;
+                const previewContainer = document.getElementById('category-image-preview-container');
+                const previewImg = document.getElementById('category-image-preview');
+                const placeholder = document.getElementById('category-image-placeholder');
+                
+                previewImg.src = canvas.toDataURL('image/jpeg');
+                previewContainer.classList.remove('hidden');
+                placeholder.classList.add('hidden');
+            }
+            window.closeCropper();
+        }, 'image/jpeg', 0.9);
+    };
+
+    document.getElementById('product-images').addEventListener('change', function(e) {
+        try {
+            const file = e.target.files[0];
+            if (!file) return;
+            window.openCropper(file, 'product');
+        } catch (error) {
+            console.error("Preview error:", error);
+        }
+    });
 </script>
 <!-- Admin Bottom Navigation -->
 <nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-3rem)] max-w-sm bg-white/80 backdrop-blur-xl border border-white/40 shadow-soft rounded-full px-4 py-3 z-40 flex justify-between items-center">
