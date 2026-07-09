@@ -169,24 +169,7 @@
             </div>
         </section>
 
-        <!-- Personal Details Summary (Hidden unless already saved) -->
-        <div id="personal-summary-section" class="mb-6 px-6 hidden">
-            <div class="flex items-center justify-between pb-3 pt-2">
-                <h3 class="text-primary text-lg font-bold">Personal Details</h3>
-            </div>
-            <div id="personal-summary" class="flex gap-4 bg-white p-4 rounded-3xl shadow-soft border border-surface-dim">
-                <div class="flex items-start gap-4 flex-1">
-                    <div class="text-primary flex items-center justify-center rounded-full bg-primary/10 shrink-0 size-12">
-                        <span class="material-symbols-outlined">person</span>
-                    </div>
-                    <div class="flex flex-col justify-center">
-                        <p id="summary-name" class="text-text text-base font-bold"></p>
-                        <p id="summary-phone" class="text-text-muted text-sm mt-0.5"></p>
-                    </div>
-                </div>
-                <button onclick="openPersonalDetailsModal()" class="shrink-0 text-primary font-bold text-sm bg-primary/10 px-4 py-2 rounded-full hover:bg-primary/20 transition-colors">Edit</button>
-            </div>
-        </div>
+
 
         <!-- Shipping Address Section (Selected Address) -->
         <section id="shipping-section" class="mb-4 transition-all duration-300 overflow-hidden">
@@ -375,9 +358,8 @@
             document.getElementById('checkout-last').value = nameParts.slice(1).join(' ') || '';
             document.getElementById('checkout-phone').value = currentUser.phone || '';
             
-            document.getElementById('summary-name').innerText = currentUser.name;
-            document.getElementById('summary-phone').innerText = '+962 ' + currentUser.phone;
-            document.getElementById('personal-summary-section').classList.remove('hidden');
+            document.getElementById('user-name').innerText = currentUser.name;
+            document.getElementById('user-phone').innerText = '+962 ' + currentUser.phone;
         }
 
         loadAddresses();
@@ -761,9 +743,8 @@ function renderAddresses() {
         
         closePersonalDetailsModal();
         
-        document.getElementById('summary-name').innerText = newName;
-        document.getElementById('summary-phone').innerText = '+962 ' + phone;
-        document.getElementById('personal-summary-section').classList.remove('hidden');
+        document.getElementById('user-name').innerText = newName;
+        document.getElementById('user-phone').innerText = '+962 ' + phone;
     }
 
     function renderOrderItems() {
@@ -840,7 +821,7 @@ function renderAddresses() {
         const toastIcon = document.getElementById('toast-icon');
         const iconSpan = toastIcon.querySelector('span');
 
-        toastMessage.textContent = message;
+        toastMessage.textContent = typeof window.t === 'function' ? window.t(message) : message;
 
         if (type === 'success') {
             toastIcon.className = 'w-10 h-10 rounded-xl flex items-center justify-center shrink-0 bg-primary shadow-sm';

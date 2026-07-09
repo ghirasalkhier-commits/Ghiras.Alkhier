@@ -269,7 +269,27 @@
         'First Name *': 'الاسم الأول *',
         'Last Name *': 'اسم العائلة *',
         'Phone Number *': 'رقم الهاتف *',
-        'Save Information': 'حفظ المعلومات'
+        'Save Information': 'حفظ المعلومات',
+        'Address deleted successfully': 'تم حذف العنوان بنجاح',
+        'Failed to delete address': 'فشل في حذف العنوان',
+        'Error deleting address': 'حدث خطأ أثناء حذف العنوان',
+        'Address Name is required': 'اسم العنوان مطلوب',
+        'Building Number/Name is required': 'رقم/اسم المبنى مطلوب',
+        'Address updated successfully': 'تم تحديث العنوان بنجاح',
+        'Address saved successfully': 'تم حفظ العنوان بنجاح',
+        'Failed to save address': 'فشل في حفظ العنوان',
+        'Error saving address': 'حدث خطأ أثناء حفظ العنوان',
+        'Error saving': 'خطأ في الحفظ',
+        'Please select a shipping address': 'يرجى اختيار عنوان الشحن',
+        'Your cart is empty.': 'عربة التسوق فارغة.',
+        'Failed to place order.': 'فشل إتمام الطلب.',
+        'An error occurred during checkout.': 'حدث خطأ أثناء الدفع.',
+        'Authentication failed': 'فشلت المصادقة',
+        'Error connecting to server.': 'خطأ في الاتصال بالخادم.',
+        'This email is already in use.': 'هذا البريد الإلكتروني مستخدم بالفعل.',
+        'Server error. Please try again.': 'خطأ في الخادم. يرجى المحاولة مرة أخرى.',
+        'Login failed': 'فشل تسجيل الدخول',
+        'Sorry, insufficient quantity available for this product': 'عذراً، الكمية المتوفرة غير كافية لهذا المنتج'
     };
     
     window.t = function(text) {

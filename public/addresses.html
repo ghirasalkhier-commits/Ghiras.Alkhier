@@ -395,7 +395,7 @@
         const msg = document.getElementById('toast-msg');
         const icon = document.getElementById('toast-icon');
         
-        msg.textContent = message;
+        msg.textContent = typeof window.t === 'function' ? window.t(message) : message;
         
         if (type === 'success') {
             toast.firstElementChild.className = 'bg-primary text-white px-6 py-3 rounded-full shadow-ambient font-medium text-sm flex items-center gap-2';
