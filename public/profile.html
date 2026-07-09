@@ -334,7 +334,15 @@
                 if (gardenItems.length === 0) {
                     gardenCount.textContent = isAr ? 'ازرع بذرتك الأولى اليوم!' : 'Plant your first seed today!';
                 } else {
-                    gardenCount.textContent = isAr ? `لديك ${gardenItems.length} نباتات تنمو` : `You have ${gardenItems.length} plant${gardenItems.length !== 1 ? 's' : ''} growing`;
+                    if (isAr) {
+                        gardenCount.textContent = gardenItems.length === 1 
+                            ? 'لديك نبتة تنمو' 
+                            : `لديك ${gardenItems.length} نباتات تنمو`;
+                    } else {
+                        gardenCount.textContent = gardenItems.length === 1
+                            ? 'You have 1 plant growing'
+                            : `You have ${gardenItems.length} plants growing`;
+                    }
                 }
             }
             

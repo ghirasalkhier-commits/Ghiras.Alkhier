@@ -194,9 +194,15 @@
             if (gardenItems.length === 0) {
                 stats.textContent = isAr ? 'لا توجد نباتات بعد' : 'No plants yet';
             } else {
-                stats.textContent = isAr
-                    ? `لديك ${gardenItems.length} نبتة في حديقتك`
-                    : `You have ${gardenItems.length} plant${gardenItems.length !== 1 ? 's' : ''} in your garden`;
+                if (isAr) {
+                    stats.textContent = gardenItems.length === 1 
+                        ? 'لديك نبتة في حديقتك' 
+                        : `لديك ${gardenItems.length} نباتات في حديقتك`;
+                } else {
+                    stats.textContent = gardenItems.length === 1
+                        ? 'You have 1 plant in your garden'
+                        : `You have ${gardenItems.length} plants in your garden`;
+                }
             }
 
             // Render

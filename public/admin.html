@@ -71,6 +71,10 @@
             -moz-appearance: textfield;
         }
     </style>
+
+    <!-- Cropper.js -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 </head>
 <body class="antialiased font-sans flex flex-col h-full min-h-screen">
 
@@ -136,7 +140,7 @@
                 <div>
                     <label class="block text-[11px] font-bold text-text-muted uppercase tracking-wider mb-2 ml-1">Product Images</label>
                     <div class="relative group cursor-pointer border-2 border-dashed border-surface-dim hover:border-primary/50 bg-surface-bright hover:bg-primary/5 rounded-3xl transition-all duration-300 p-6 flex flex-col items-center justify-center text-center overflow-hidden" onclick="document.getElementById('product-images').click()">
-                        <input type="file" id="product-images" multiple accept="image/*" class="hidden">
+                        <input type="file" id="product-images" accept="image/*" class="hidden">
                         
                         <div id="product-images-placeholder" class="flex flex-col items-center justify-center space-y-2 relative z-0">
                             <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-1 group-hover:scale-110 transition-transform">
@@ -1194,5 +1198,24 @@
     </a>
 </nav>
 
+
+    <!-- Cropper Modal -->
+    <div id="cropper-modal" class="fixed inset-0 z-[200] hidden bg-black/80 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl w-full max-w-md overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="p-4 border-b border-surface-dim flex justify-between items-center">
+                <h3 class="font-bold text-lg text-text" id="cropper-title">Crop Image</h3>
+                <button type="button" onclick="closeCropper()" class="text-text-muted hover:text-red-500 transition-colors">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <div class="flex-1 overflow-hidden bg-surface-dim relative" style="min-height: 300px; max-height: 60vh;">
+                <img id="cropper-image" src="" class="max-w-full block">
+            </div>
+            <div class="p-4 border-t border-surface-dim flex justify-end gap-3">
+                <button type="button" onclick="closeCropper()" class="px-6 py-2 rounded-full text-text-muted hover:bg-surface-dim font-bold transition-colors">Cancel</button>
+                <button type="button" onclick="applyCrop()" class="px-6 py-2 rounded-full bg-primary text-white font-bold hover:bg-primary-dark transition-colors shadow-soft">Crop & Save</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

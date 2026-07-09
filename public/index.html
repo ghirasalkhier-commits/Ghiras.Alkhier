@@ -129,8 +129,9 @@
 
         async function loadCategories() {
             try {
-                titleEl.textContent = 'Discover Our Categories';
-                subtitleEl.textContent = 'Carefully selected Ghiras Alkhier collections';
+                const isAr = localStorage.getItem('site_language') === 'ar';
+                titleEl.textContent = isAr ? 'اكتشف أقسامنا' : 'Discover Our Categories';
+                subtitleEl.textContent = isAr ? 'مجموعات غراس الخير المختارة بعناية' : 'Carefully selected Ghiras Alkhier collections';
                 actionEl.innerHTML = ''; 
                 
                 // Set flex layout centered to ensure items are always centered even if fewer than 4
