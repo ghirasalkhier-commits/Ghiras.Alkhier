@@ -94,7 +94,7 @@ window.formatDate = function(raw, options) {
         'No categories currently available.': 'لا توجد أقسام متاحة حالياً.',
         'Bring Nature Home': 'اجلب الطبيعة لمنزلك',
         'Cultivate your personal sanctuary with our curated collection of resilient, beautiful houseplants and organic care essentials designed for modern living.': 'اصنع ملاذك الشخصي مع مجموعتنا المختارة من النباتات المنزلية الجميلة ومستلزمات العناية العضوية المصممة للحياة العصرية.',
-        'Shop the Collection': 'تسوق المجموعة',
+        'Shop the Collection': 'اكتشف المجموعة',
         'Popular Plants': 'نباتات شائعة',
         'View All': 'عرض الكل',
         'Add to Cart': 'أضف للسلة',
@@ -175,7 +175,7 @@ window.formatDate = function(raw, options) {
         'Cultivate your personal sanctuary with our curated collection of resilient, beautiful houseplants and organic care essentials designed for modern living.': 'ازرع ملاذك الشخصي مع مجموعتنا المختارة من النباتات المنزلية المرنة والجميلة ومستلزمات العناية العضوية المصممة للحياة العصرية.',
         'Cultivate your personal sanctuary with our curated collection of resilient, beautiful': 'ازرع ملاذك الشخصي مع مجموعتنا المختارة من النباتات المنزلية المرنة والجميلة ومستلزمات العناية العضوية المصممة للحياة العصرية.',
         '.houseplants and organic care essentials designed for modern living': 'ازرع ملاذك الشخصي مع مجموعتنا المختارة من النباتات المنزلية المرنة والجميلة ومستلزمات العناية العضوية المصممة للحياة العصرية.',
-        'Shop the Collection': 'تسوق المجموعة',
+        'Shop the Collection': 'اكتشف المجموعة',
         
         'Botanical Clarity for your Home. We believe in the restorative power of nature, brought indoors with mindful design and sustainable practices.': 'وضوح نباتي لمنزلك. نؤمن بالقوة التصالحية للطبيعة، ونجلبها إلى الداخل بتصميم واعٍ وممارسات مستدامة.',
         'Botanical Clarity for your Home. We believe in the restorative power of nature, brought indoors': 'وضوح نباتي لمنزلك. نؤمن بالقوة التصالحية للطبيعة، ونجلبها إلى الداخل بتصميم واعٍ وممارسات مستدامة.',
