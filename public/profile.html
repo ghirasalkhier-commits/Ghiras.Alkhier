@@ -413,52 +413,88 @@
                 
                 list.innerHTML = displayOrders.map(o => {
                     const data = JSON.parse(o.order_data);
-                    const items = data.items.map(i => {
-                        const itemName = typeof window.getLangField === 'function' ? window.getLangField(i, 'name') : i.name;
-                        return `${i.quantity}x ${itemName}`;
-                    }).join('<br>');
+                    const isAr = localStorage.getItem('site_language') === 'ar';
+                    const t = (key) => typeof window.t === 'function' ? window.t(key) : key;
+
+                    // Items HTML with images
+                    const itemsHtml = data.items.map(i => {
+                        const displayName = (isAr && i.name_ar) ? i.name_ar : (typeof window.getLangField === 'function' ? window.getLangField(i, 'name') : i.name);
+                        const imgSrc = i.image || '';
+                        return `
+                        <div class="flex items-center gap-3 py-2">
+                            ${imgSrc ? `<img src="${imgSrc}" alt="${displayName}" class="w-10 h-10 rounded-lg object-cover bg-surface-dim shrink-0">` : `<div class="w-10 h-10 rounded-lg bg-surface-dim flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-text-muted text-base">eco</span></div>`}
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-semibold text-text truncate">${displayName}</p>
+                                <p class="text-xs text-text-muted">${i.quantity} × ${t('JOD')} ${i.price.toFixed(2)}</p>
+                            </div>
+                            <p class="text-sm font-bold text-primary whitespace-nowrap">${t('JOD')} ${(i.price * i.quantity).toFixed(2)}</p>
+                        </div>`;
+                    }).join('');
                     
-                    let dateStr = (o.created_at && typeof o.created_at === 'string') ? o.created_at.replace(' ', 'T') + 'Z' : o.created_at;
-                    let dateObj = new Date(dateStr);
-                    const date = isNaN(dateObj) ? o.created_at : dateObj.toLocaleString();
+                    // Fix date
+                    let dateDisplay = '';
+                    try {
+                        const raw = o.created_at;
+                        if (typeof raw === 'string') {
+                            dateDisplay = new Date(raw.replace(' ', 'T') + 'Z').toLocaleString();
+                        } else if (raw) {
+                            dateDisplay = new Date(raw).toLocaleString();
+                        }
+                        if (dateDisplay === 'Invalid Date') dateDisplay = String(raw || '');
+                    } catch(e) { dateDisplay = ''; }
                     
                     let statusText = o.status;
                     let statusClass = 'bg-surface-dim text-text-muted';
-                    if (o.status === 'pending') { statusText = 'Pending'; statusClass = 'bg-orange-100 text-orange-700'; }
-                    if (o.status === 'processing') { statusText = 'Processing'; statusClass = 'bg-yellow-100 text-yellow-800'; }
-                    if (o.status === 'on_the_way') { statusText = 'On the Way'; statusClass = 'bg-blue-100 text-blue-700'; }
-                    if (o.status === 'completed') { statusText = 'Completed'; statusClass = 'bg-[#bcebd2] text-[#135c38]'; }
-                    if (o.status === 'cancelled') { statusText = 'Cancelled'; statusClass = 'bg-red-100 text-red-700'; }
+                    if (o.status === 'pending') { statusText = isAr ? 'قيد الانتظار' : 'Pending'; statusClass = 'bg-orange-100 text-orange-700'; }
+                    if (o.status === 'processing') { statusText = isAr ? 'قيد المعالجة' : 'Processing'; statusClass = 'bg-yellow-100 text-yellow-800'; }
+                    if (o.status === 'on_the_way') { statusText = isAr ? 'في الطريق' : 'On the Way'; statusClass = 'bg-blue-100 text-blue-700'; }
+                    if (o.status === 'completed') { statusText = isAr ? 'مكتمل' : 'Completed'; statusClass = 'bg-[#bcebd2] text-[#135c38]'; }
+                    if (o.status === 'cancelled') { statusText = isAr ? 'ملغي' : 'Cancelled'; statusClass = 'bg-red-100 text-red-700'; }
+
+                    // Delivery fee
+                    const deliveryFee = data.deliveryFee || (data.address ? 5.00 : 0);
+                    const subtotal = o.total_price - deliveryFee;
 
                     return `
                     <div class="bg-white p-5 rounded-3xl shadow-soft border border-surface-dim space-y-3">
                         <div class="flex justify-between items-start border-b border-surface-dim pb-3">
                             <div>
-                                <p class="text-xs text-text-muted font-medium mb-1">${typeof window.t === 'function' ? window.t('Order') : 'Order'} #${o.id}</p>
-                                <p class="text-sm font-bold text-text">${date}</p>
+                                <p class="text-xs text-text-muted font-medium mb-1">${t('Order')} #${o.id}</p>
+                                <p class="text-sm font-bold text-text">${dateDisplay}</p>
                             </div>
                             <span class="px-3 py-1 rounded-full text-xs font-bold ${statusClass}">
                                 ${statusText}
                             </span>
                         </div>
                         
-                        <div class="py-2">
-                            <p class="text-sm text-text leading-relaxed font-medium">${items}</p>
+                        <div class="divide-y divide-surface-dim">
+                            ${itemsHtml}
                         </div>
                         ${data.address ? `
                         <div class="py-2 border-t border-surface-dim">
-                            <p class="text-xs text-text-muted mb-1 flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">location_on</span> Delivery Address</p>
-                            <p class="text-sm font-medium text-text">${data.address.label || 'Unnamed Address'}</p>
+                            <p class="text-xs text-text-muted mb-1 flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">location_on</span> ${isAr ? 'عنوان التوصيل' : 'Delivery Address'}</p>
+                            <p class="text-sm font-medium text-text">${data.address.label || (isAr ? 'عنوان بدون اسم' : 'Unnamed Address')}</p>
                         </div>
                         ` : `
                         <div class="py-2 border-t border-surface-dim">
-                            <p class="text-xs text-text-muted mb-1 flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">storefront</span> Store Pickup</p>
+                            <p class="text-xs text-text-muted mb-1 flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">storefront</span> ${isAr ? 'استلام من المتجر' : 'Store Pickup'}</p>
                         </div>
                         `}
                         
-                        <div class="flex justify-between items-center pt-3 border-t border-surface-dim">
-                            <span class="text-sm text-text-muted">Total Amount</span>
-                            <p class="font-bold text-primary">${typeof window.t === 'function' ? window.t('JOD') : 'JOD'} ${o.total_price.toFixed(2)}</p>
+                        <div class="pt-3 border-t border-surface-dim space-y-1">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs text-text-muted">${isAr ? 'المجموع الفرعي' : 'Subtotal'}</span>
+                                <span class="text-sm text-text">${t('JOD')} ${subtotal.toFixed(2)}</span>
+                            </div>
+                            ${deliveryFee > 0 ? `
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs text-text-muted">${isAr ? 'رسوم التوصيل' : 'Delivery Fee'}</span>
+                                <span class="text-sm text-text">${t('JOD')} ${deliveryFee.toFixed(2)}</span>
+                            </div>` : ''}
+                            <div class="flex justify-between items-center pt-1">
+                                <span class="text-sm font-bold text-text">${isAr ? 'المبلغ الإجمالي' : 'Total Amount'}</span>
+                                <p class="font-bold text-primary text-base">${t('JOD')} ${o.total_price.toFixed(2)}</p>
+                            </div>
                         </div>
                     </div>
                     `;

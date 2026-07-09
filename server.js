@@ -634,7 +634,7 @@ app.post('/api/checkout', authMiddleware, (req, res) => {
         const placeholders = items.map(() => '?').join(',');
         const itemIds = items.map(i => i.id);
 
-        db.all(`SELECT id, price, stock, name FROM products WHERE id IN (${placeholders})`, itemIds, (err, products) => {
+        db.all(`SELECT id, price, stock, name, name_ar, image FROM products WHERE id IN (${placeholders})`, itemIds, (err, products) => {
             if (err) return res.status(500).json({ error: 'Failed to verify products' });
 
             for (let reqItem of items) {
@@ -652,12 +652,18 @@ app.post('/api/checkout', authMiddleware, (req, res) => {
                 }
 
                 actualTotalPrice += dbProduct.price * reqItem.quantity;
+                let productImage = reqItem.image;
+                try {
+                    const parsedImages = JSON.parse(dbProduct.image);
+                    if (Array.isArray(parsedImages) && parsedImages.length > 0) productImage = parsedImages[0];
+                } catch(e) { if (dbProduct.image) productImage = dbProduct.image; }
                 validItems.push({
                     id: dbProduct.id,
                     name: dbProduct.name,
+                    name_ar: dbProduct.name_ar || '',
                     price: dbProduct.price,
                     quantity: reqItem.quantity,
-                    image: reqItem.image
+                    image: productImage
                 });
             }
 
@@ -674,9 +680,13 @@ app.post('/api/checkout', authMiddleware, (req, res) => {
                     db.run(`UPDATE products SET stock = stock - ? WHERE id = ?`, [vItem.quantity, vItem.id]);
                 }
 
+                // Add delivery fee if address exists (not pickup)
+                const deliveryFee = address ? 5.00 : 0;
+                actualTotalPrice += deliveryFee;
+
                 // Create order
                 db.run(`INSERT INTO orders (user_email, order_data, total_price) VALUES (?, ?, ?)`,
-                    [email, JSON.stringify({ items: validItems, customerDetails, address, paymentMethod }), actualTotalPrice], function(insertErr) {
+                    [email, JSON.stringify({ items: validItems, customerDetails, address, paymentMethod, deliveryFee }), actualTotalPrice], function(insertErr) {
                     
                     if (insertErr) {
                         db.run('ROLLBACK');

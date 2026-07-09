@@ -291,6 +291,7 @@
         'Login failed': 'فشل تسجيل الدخول',
         'Sorry, insufficient quantity available for this product': 'عذراً، الكمية المتوفرة غير كافية لهذا المنتج',
         'No additional details': 'لا توجد تفاصيل إضافية',
+        'Quantity': 'الكمية',
         'Error loading orders.': 'حدث خطأ أثناء تحميل الطلبات.'
     };
     
