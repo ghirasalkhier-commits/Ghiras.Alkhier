@@ -122,6 +122,17 @@
                 </div>
                 <span class="material-symbols-outlined text-text-muted">chevron_right</span>
             </button>
+
+            <!-- Language -->
+            <button onclick="toggleLanguage()" class="group flex items-center justify-between p-4 hover:bg-surface-dim transition-colors">
+                <div class="flex items-center gap-4">
+                    <div class="flex h-12 w-12 items-center justify-center rounded-full bg-[#e0f2fe] text-[#0284c7] group-hover:bg-[#0284c7] group-hover:text-white transition-colors">
+                        <span class="material-symbols-outlined">language</span>
+                    </div>
+                    <span class="font-semibold text-text">Language / اللغة</span>
+                </div>
+                <span id="current-lang-badge" class="text-sm text-text-muted font-medium px-3 py-1 bg-surface-dim rounded-full">EN</span>
+            </button>
         </div>
     </div>
     
@@ -166,7 +177,23 @@
 <script>
     // Load user data on profile load
     
+    function toggleLanguage() {
+        const currentLang = localStorage.getItem('site_language') || 'en';
+        if (currentLang === 'en') {
+            localStorage.setItem('site_language', 'ar');
+        } else {
+            localStorage.setItem('site_language', 'en');
+        }
+        window.location.reload();
+    }
+
     document.addEventListener('DOMContentLoaded', async () => {
+        const currentLang = localStorage.getItem('site_language') || 'en';
+        const langBadge = document.getElementById('current-lang-badge');
+        if (langBadge) {
+            langBadge.textContent = currentLang === 'ar' ? 'العربية' : 'EN';
+        }
+
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         if (!currentUser) return;
         
