@@ -299,7 +299,10 @@
 
         // Fetch Orders
         try {
-            const res = await fetch(`/api/orders/${encodeURIComponent(currentUser.email)}`);
+            const token = localStorage.getItem('token');
+            const res = await fetch(`/api/orders/${encodeURIComponent(currentUser.email)}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
             const orders = await res.json();
             const list = document.getElementById('profile-orders-list');
             const seeAllBtn = document.getElementById('see-all-orders-btn');
@@ -313,7 +316,7 @@
             const completedOrders = orders.filter(o => o.status === 'completed');
             completedOrders.forEach(o => {
                 const data = JSON.parse(o.order_data);
-                let dateStr1 = o.created_at ? o.created_at.replace(' ', 'T') + 'Z' : '';
+                let dateStr1 = (o.created_at && typeof o.created_at === 'string') ? o.created_at.replace(' ', 'T') + 'Z' : o.created_at;
                 let dateObj1 = new Date(dateStr1);
                 const orderDate = isNaN(dateObj1) ? o.created_at : dateObj1.toLocaleDateString(undefined, { year: 'numeric', month: 'short' });
                 data.items.forEach(item => {
@@ -415,7 +418,7 @@
                         return `${i.quantity}x ${itemName}`;
                     }).join('<br>');
                     
-                    let dateStr = o.created_at ? o.created_at.replace(' ', 'T') + 'Z' : '';
+                    let dateStr = (o.created_at && typeof o.created_at === 'string') ? o.created_at.replace(' ', 'T') + 'Z' : o.created_at;
                     let dateObj = new Date(dateStr);
                     const date = isNaN(dateObj) ? o.created_at : dateObj.toLocaleString();
                     

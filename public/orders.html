@@ -196,7 +196,10 @@
         if (!currentUser) return;
 
         try {
-            const res = await fetch(`/api/orders/${encodeURIComponent(currentUser.email)}`);
+            const token = localStorage.getItem('token');
+            const res = await fetch(`/api/orders/${encodeURIComponent(currentUser.email)}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
             const orders = await res.json();
             allOrders = orders;
             renderOrders();
