@@ -152,13 +152,14 @@
                 
                 container.innerHTML = categories.map(cat => {
                     const displayImage = cat.image || 'https://via.placeholder.com/400?text=' + encodeURIComponent(cat.name);
+                    const displayName = window.getLangField ? window.getLangField(cat, 'name') : cat.name;
                     return `
-                        <article class="cursor-pointer transform hover:scale-[1.03] active:scale-[0.98] transition-all flex flex-col items-center justify-center text-center w-24" onclick="window.location.href='product.html?category=${encodeURIComponent(cat.name)}'">
+                        <article class="cursor-pointer transform hover:scale-[1.03] active:scale-[0.98] transition-all flex flex-col items-center justify-center text-center w-28 shrink-0" onclick="window.location.href='product.html?category=${encodeURIComponent(cat.name)}'">
                             <div class="relative w-16 h-16 rounded-2xl overflow-hidden mb-2 shadow-soft border-2 border-white bg-white flex items-center justify-center">
                                 ${cat.is_visible === 0 ? `<span class="absolute inset-0 bg-red-950/65 flex items-center justify-center text-[10px] text-white font-bold rounded-2xl">Hidden</span>` : ''}
-                                <img alt="${cat.name}" class="w-full h-full object-cover rounded-2xl" src="${displayImage}"/>
+                                <img alt="${displayName}" class="w-full h-full object-cover rounded-2xl" src="${displayImage}"/>
                             </div>
-                            <h4 class="font-black text-[13px] text-primary text-center leading-tight tracking-wide px-0.5">${cat.name}</h4>
+                            <h4 class="font-black text-[13px] text-primary text-center leading-tight tracking-wide px-0.5 break-words max-w-full">${displayName}</h4>
                         </article>
                     `;
                 }).join('');
@@ -202,7 +203,7 @@
                 const res = await fetch(isAdmin ? '/api/products?all=1' : '/api/products');
                 const products = await res.json();
                 
-                const featured = products.filter(p => p.is_featured && (p.stock === undefined || p.stock > 0));
+                const featured = products.filter(p => p.is_featured && (isAdmin || p.stock === undefined || p.stock > 0));
                 
                 if (featured.length === 0) {
                     container.innerHTML = '';
@@ -212,19 +213,22 @@
                 
                 container.parentElement.style.display = 'block';
 
-                container.innerHTML = featured.map(p => `
+                container.innerHTML = featured.map(p => {
+                    const displayName = window.getLangField ? window.getLangField(p, 'name') : p.name;
+                    const displayDesc = window.getLangField ? window.getLangField(p, 'description') : p.description;
+                    return `
                     <div class="bg-white rounded-3xl shadow-soft border border-surface-dim overflow-hidden flex items-center p-3 gap-4 cursor-pointer hover:border-primary/30 transition-colors" onclick="window.location.href='product.html?id=${p.id}'">
                         <img src="${(()=>{ try { return JSON.parse(p.image)[0]; } catch(e){ return p.image || 'https://via.placeholder.com/150'; } })()}" class="w-24 h-24 rounded-2xl object-cover bg-surface-dim mix-blend-multiply flex-shrink-0">
                         <div class="flex-1">
-                            <h4 class="font-bold text-text text-lg leading-tight mb-1">${p.name}</h4>
-                            <p class="text-[10px] text-text-muted line-clamp-2 mb-2">${p.description || ''}</p>
+                            <h4 class="font-bold text-text text-lg leading-tight mb-1">${displayName}</h4>
+                            <p class="text-[10px] text-text-muted line-clamp-2 mb-2">${displayDesc || ''}</p>
                             <div class="flex items-center justify-between">
                                 <span class="font-bold text-primary">JOD ${p.price.toFixed(2)}</span>
                                 <span class="material-symbols-outlined text-primary bg-primary/10 rounded-full p-1 text-[16px]">arrow_forward</span>
                             </div>
                         </div>
                     </div>
-                `).join('');
+                `}).join('');
             } catch(e) {
                 console.error('Failed to load featured products', e);
             }
@@ -370,6 +374,68 @@
 <script src="cart.js"></script>
 <script>
     // lucide.createIcons();
+</script>
+<!-- Language Selection Modal (Onboarding) -->
+<div id="language-onboarding-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/40 backdrop-blur-sm transition-opacity duration-300 opacity-0">
+    <div class="bg-surface w-[90%] max-w-sm rounded-3xl p-6 shadow-2xl transform scale-95 transition-transform duration-300 relative overflow-hidden" id="lang-modal-content">
+        <!-- Decorative bg -->
+        <div class="absolute -top-20 -right-20 w-40 h-40 bg-primary/10 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="absolute -bottom-20 -left-20 w-40 h-40 bg-primary/5 rounded-full blur-2xl pointer-events-none"></div>
+        
+        <div class="relative z-10 text-center">
+            <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary mx-auto mb-4">
+                <span class="material-symbols-outlined text-[32px]">language</span>
+            </div>
+            <h3 class="text-xl font-bold text-text mb-2 tracking-tight">Choose your language<br><span class="text-lg font-bold font-['Tajawal']" dir="rtl">اختر لغتك</span></h3>
+            <p class="text-sm text-text-muted mb-8 leading-relaxed">
+                You can always change this later in your profile.<br>
+                <span class="text-[13px] font-['Tajawal']" dir="rtl">يمكنك تغيير هذا لاحقاً من صفحة البروفايل.</span>
+            </p>
+            
+            <div class="flex flex-col gap-3">
+                <button onclick="selectOnboardingLanguage('ar')" class="w-full bg-primary hover:bg-primary/90 text-white py-4 rounded-2xl font-bold shadow-ambient transition-all active:scale-[0.98] flex items-center justify-center gap-3">
+                    <span class="font-['Tajawal'] text-lg">العربية</span>
+                    <span class="text-primary-light text-sm font-normal">Arabic</span>
+                </button>
+                <button onclick="selectOnboardingLanguage('en')" class="w-full bg-surface-dim hover:bg-surface-dim/80 text-text py-4 rounded-2xl font-bold transition-colors active:scale-[0.98] border border-gray-200 flex items-center justify-center gap-3">
+                    <span>English</span>
+                    <span class="text-text-muted text-sm font-normal font-['Tajawal']">الإنجليزية</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const currentUser = localStorage.getItem('currentUser');
+        const langSelected = localStorage.getItem('language_selected');
+        
+        if (currentUser && !langSelected) {
+            const modal = document.getElementById('language-onboarding-modal');
+            const content = document.getElementById('lang-modal-content');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+            }, 50);
+        }
+    });
+
+    function selectOnboardingLanguage(lang) {
+        localStorage.setItem('site_language', lang);
+        localStorage.setItem('language_selected', 'true');
+        
+        const modal = document.getElementById('language-onboarding-modal');
+        const content = document.getElementById('lang-modal-content');
+        modal.classList.add('opacity-0');
+        content.classList.add('scale-95');
+        
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            window.location.reload();
+        }, 300);
+    }
 </script>
 </body>
 </html>

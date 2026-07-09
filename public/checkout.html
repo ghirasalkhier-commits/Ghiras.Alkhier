@@ -204,6 +204,21 @@
             <div class="flex items-center justify-between px-6 pb-3 pt-2">
                 <h3 class="text-primary text-lg font-bold">Delivery Address</h3>
             </div>
+            <div class="px-6 mb-4">
+                <div class="flex gap-4 bg-white p-4 rounded-3xl shadow-soft border border-surface-dim items-center">
+                    <div class="flex items-start gap-4 flex-1">
+                        <div class="text-primary flex items-center justify-center rounded-full bg-primary/10 shrink-0 size-12">
+                            <span class="material-symbols-outlined">contact_phone</span>
+                        </div>
+                        <div class="flex flex-col justify-center">
+                            <p class="text-[10px] uppercase font-bold text-text-muted mb-0.5 tracking-wider" data-i18n="contact_info">Contact Info / معلومات التواصل</p>
+                            <p id="user-name" class="text-text text-base font-bold"></p>
+                            <p id="user-phone" class="text-text-muted text-sm leading-relaxed mt-0.5"></p>
+                        </div>
+                    </div>
+                    <button onclick="openPersonalDetailsModal()" class="text-primary font-bold text-sm bg-primary/10 px-4 py-2 rounded-full hover:bg-primary/20 transition-colors">Edit</button>
+                </div>
+            </div>
             <div class="px-6">
                 <div class="flex gap-4 bg-white p-4 rounded-3xl shadow-soft border border-surface-dim">
                     <div class="flex items-start gap-4 flex-1">
@@ -311,8 +326,8 @@
     </div>
     <div class="fixed bottom-0 w-full max-w-xl left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur-md border-t border-surface-dim p-4 pb-8 z-[70]">
         <button id="btn-save-address" onclick="saveNewAddress()" class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-full shadow-ambient transition-all flex justify-center items-center gap-2">
-            Save Address
-            <span class="material-symbols-outlined">save</span>
+            Add Address
+            <span class="material-symbols-outlined">add_circle</span>
         </button>
     </div>
 </div>
@@ -695,7 +710,7 @@ function renderAddresses() {
             console.error(e);
             showToast('Error saving', 'error');
         } finally {
-            btn.innerHTML = 'Save Address <span class="material-symbols-outlined">save</span>';
+            btn.innerHTML = 'Add Address <span class="material-symbols-outlined">save</span>';
             btn.disabled = false;
         }
     }
@@ -772,15 +787,16 @@ function renderAddresses() {
             items.forEach(item => {
                 const itemTotal = item.price * item.quantity;
                 currentSubtotal += itemTotal;
+                const displayName = window.getLangField ? window.getLangField(item, 'name') : item.name;
 
                 const html = `
                 <div class="flex items-center gap-4 bg-white p-3 rounded-3xl border border-surface-dim shadow-soft">
                     <div class="w-20 h-20 rounded-2xl bg-[#e8ebe6] flex items-center justify-center overflow-hidden shrink-0">
-                        <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover mix-blend-multiply">
+                        <img src="${item.image}" alt="${displayName}" class="w-full h-full object-cover mix-blend-multiply">
                     </div>
                     <div class="flex-1 min-w-0 flex flex-col justify-between h-full py-1">
                         <div class="flex justify-between items-start gap-2">
-                            <h4 class="text-sm font-semibold text-primary truncate flex-1" title="${item.name}">${item.name}</h4>
+                            <h4 class="text-sm font-semibold text-primary truncate flex-1" title="${displayName}">${displayName}</h4>
                             <span class="text-sm font-bold text-primary whitespace-nowrap">JOD ${itemTotal.toFixed(2)}</span>
                         </div>
                         <div class="flex items-center justify-between mt-2">
@@ -788,12 +804,12 @@ function renderAddresses() {
                             
                             <!-- Quantity Controls -->
                             <div class="flex items-center bg-surface-dim rounded-full p-1 h-8">
-                                <button onclick="updateQuantity('${item.name}', -1)" 
+                                <button onclick="updateQuantity('${item.name.replace(/'/g, "\\'")}', -1)" 
                                     class="w-7 h-full flex items-center justify-center text-text hover:bg-white rounded-full transition-colors active:scale-95">
                                     <span class="material-symbols-outlined text-[16px]">remove</span>
                                 </button>
                                 <span class="w-8 text-center text-sm font-semibold text-text">${item.quantity}</span>
-                                <button onclick="updateQuantity('${item.name}', 1)" 
+                                <button onclick="updateQuantity('${item.name.replace(/'/g, "\\'")}', 1)" 
                                     class="w-7 h-full flex items-center justify-center bg-primary text-white rounded-full shadow-sm hover:bg-primary/90 transition-all active:scale-95">
                                     <span class="material-symbols-outlined text-[16px]">add</span>
                                 </button>

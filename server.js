@@ -169,6 +169,8 @@ const db = new sqlite3.Database('./database.sqlite', (err) => {
             db.run(`ALTER TABLE products ADD COLUMN stock INTEGER DEFAULT 1`, (err) => {});
             db.run(`ALTER TABLE products ADD COLUMN is_visible INTEGER DEFAULT 0`, (err) => {});
             db.run(`ALTER TABLE products ADD COLUMN is_featured INTEGER DEFAULT 0`, (err) => {});
+            db.run(`ALTER TABLE products ADD COLUMN name_ar TEXT`, (err) => {});
+            db.run(`ALTER TABLE products ADD COLUMN description_ar TEXT`, (err) => {});
             console.log('Products table ready.');
         });
 
@@ -193,6 +195,7 @@ const db = new sqlite3.Database('./database.sqlite', (err) => {
             }
             db.run(`ALTER TABLE categories ADD COLUMN image TEXT`, (err) => {});
             db.run(`ALTER TABLE categories ADD COLUMN is_visible INTEGER DEFAULT 0`, (err) => {});
+            db.run(`ALTER TABLE categories ADD COLUMN name_ar TEXT`, (err) => {});
         });
 
         // Create Addresses Table
@@ -756,7 +759,7 @@ app.put('/api/products/:id/feature', authMiddleware, adminMiddleware, (req, res)
 
 // Add a product
 app.post('/api/products', authMiddleware, adminMiddleware, upload.array('images', 10), (req, res) => {
-    const { name, description, price, category, stock, watering } = req.body;
+    const { name, description, price, category, stock, watering, name_ar, description_ar } = req.body;
     let imagePaths = [];
     if (req.files && req.files.length > 0) {
         imagePaths = req.files.map(f => f.path);
@@ -767,8 +770,8 @@ app.post('/api/products', authMiddleware, adminMiddleware, upload.array('images'
         }
     }
     
-    db.run(`INSERT INTO products (name, description, price, image, category, stock, watering) VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [name, description, price, JSON.stringify(imagePaths), category, stock || 1, watering], function(err) {
+    db.run(`INSERT INTO products (name, description, price, image, category, stock, watering, name_ar, description_ar) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [name, description, price, JSON.stringify(imagePaths), category, stock || 1, watering, name_ar, description_ar], function(err) {
             if (err) return res.status(500).json({ error: err.message });
             res.json({ id: this.lastID });
         });
@@ -787,11 +790,11 @@ app.get('/api/products/:id', (req, res) => {
 
 // Update a product
 app.put('/api/products/:id', authMiddleware, adminMiddleware, upload.array('images', 10), (req, res) => {
-    const { name, description, price, category, stock, watering } = req.body;
+    const { name, description, price, category, stock, watering, name_ar, description_ar } = req.body;
     const { id } = req.params;
     
-    let updateQuery = `UPDATE products SET name=?, description=?, price=?, category=?, stock=?, watering=?`;
-    let params = [name, description, price, category, stock || 1, watering];
+    let updateQuery = `UPDATE products SET name=?, description=?, price=?, category=?, stock=?, watering=?, name_ar=?, description_ar=?`;
+    let params = [name, description, price, category, stock || 1, watering, name_ar, description_ar];
     
     let finalImages = [];
     if (req.body.existingImages) {
@@ -860,11 +863,11 @@ app.put('/api/categories/:id/visibility', authMiddleware, adminMiddleware, (req,
 
 // Add a category
 app.post('/api/categories', authMiddleware, adminMiddleware, upload.single('image'), (req, res) => {
-    const { name } = req.body;
+    const { name, name_ar } = req.body;
     const image = req.file ? req.file.path : null;
     
     if (!name) return res.status(400).json({ error: 'Category name is required' });
-    db.run(`INSERT INTO categories (name, image, is_visible) VALUES (?, ?, 0)`, [name, image], function(err) {
+    db.run(`INSERT INTO categories (name, image, is_visible, name_ar) VALUES (?, ?, 0, ?)`, [name, image, name_ar], function(err) {
         if (err) return res.status(500).json({ error: err.message });
         res.json({ success: true, id: this.lastID });
     });
@@ -873,9 +876,9 @@ app.post('/api/categories', authMiddleware, adminMiddleware, upload.single('imag
 // Update a category
 app.put('/api/categories/:id', authMiddleware, adminMiddleware, upload.single('image'), (req, res) => {
     const { id } = req.params;
-    const { name } = req.body;
-    let updateQuery = `UPDATE categories SET name = ?`;
-    let params = [name];
+    const { name, name_ar } = req.body;
+    let updateQuery = `UPDATE categories SET name = ?, name_ar = ?`;
+    let params = [name, name_ar];
 
     if (req.file) {
         updateQuery += `, image=?`;
