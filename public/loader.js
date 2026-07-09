@@ -290,7 +290,8 @@
         'Server error. Please try again.': 'خطأ في الخادم. يرجى المحاولة مرة أخرى.',
         'Login failed': 'فشل تسجيل الدخول',
         'Sorry, insufficient quantity available for this product': 'عذراً، الكمية المتوفرة غير كافية لهذا المنتج',
-        'No additional details': 'لا توجد تفاصيل إضافية'
+        'No additional details': 'لا توجد تفاصيل إضافية',
+        'Error loading orders.': 'حدث خطأ أثناء تحميل الطلبات.'
     };
     
     window.t = function(text) {

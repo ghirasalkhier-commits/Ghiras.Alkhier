@@ -464,7 +464,8 @@
             if (typeof window.applyTranslations === 'function') window.applyTranslations();
         } catch (err) {
             console.error("Error loading orders", err);
-            document.getElementById('profile-orders-list').innerHTML = '<p class="text-center text-text-muted py-4">Error loading orders.</p>';
+            const errMsg = typeof window.t === 'function' ? window.t('Error loading orders.') : 'Error loading orders.';
+            document.getElementById('profile-orders-list').innerHTML = `<p class="text-center text-text-muted py-4">${errMsg}</p>`;
             if (typeof window.applyTranslations === 'function') window.applyTranslations();
         }
     });
