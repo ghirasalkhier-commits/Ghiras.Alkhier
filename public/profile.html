@@ -140,10 +140,10 @@
     <div class="flex flex-col gap-4">
         <div class="flex items-center justify-between px-2">
             <div>
-                <h3 class="text-xl font-bold text-text">My Garden</h3>
+                <h3 id="garden-title" class="text-xl font-bold text-text">My Garden</h3>
                 <p id="garden-count" class="text-sm text-text-muted">Plant your first seed today!</p>
             </div>
-            <button id="see-all-garden-btn" class="text-sm font-bold text-primary hover:text-primary/80 hidden">See All</button>
+            <button id="see-all-garden-btn" onclick="window.location.href='garden.html'" class="text-sm font-bold text-primary hover:text-primary/80 hidden">See All</button>
         </div>
         <div id="profile-garden-list" class="flex gap-4 overflow-x-auto pb-4 -mx-6 px-6 scrollbar-hide snap-x">
             <p class="text-center text-text-muted text-sm w-full">Loading your garden...</p>
@@ -329,6 +329,8 @@
 
             if (gardenCount) {
                 const isAr = localStorage.getItem('site_language') === 'ar';
+                const gardenTitleEl = document.getElementById('garden-title');
+                if (gardenTitleEl) gardenTitleEl.textContent = isAr ? 'حديقتي' : 'My Garden';
                 if (gardenItems.length === 0) {
                     gardenCount.textContent = isAr ? 'ازرع بذرتك الأولى اليوم!' : 'Plant your first seed today!';
                 } else {
@@ -356,7 +358,10 @@
                     </div>`;
                     if (seeAllGardenBtn) seeAllGardenBtn.classList.add('hidden');
                 } else {
-                    if (seeAllGardenBtn) seeAllGardenBtn.classList.remove('hidden');
+                    if (seeAllGardenBtn) {
+                        seeAllGardenBtn.classList.remove('hidden');
+                        seeAllGardenBtn.textContent = isAr ? 'عرض الكل' : 'See All';
+                    }
                     gardenList.innerHTML = gardenItems.map((item, index) => {
                         const bgs = ['bg-[#e8ebe6]', 'bg-[#e2e8e0]', 'bg-[#f8deb1]/30', 'bg-primary/5'];
                         const bgClass = bgs[index % bgs.length];

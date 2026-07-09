@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=400, user-scalable=no">
+    <title>My Garden - Ghiras Alkhier</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <script>
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (!currentUser || !localStorage.getItem('token')) {
+            window.location.href = 'index.html';
+        }
+    </script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#135c38',
+                        'primary-light': '#bcebd2',
+                        surface: '#fbf9f8',
+                        'surface-dim': '#f5f3f3',
+                        text: '#3d4943',
+                        'text-muted': '#6b7a73',
+                    },
+                    borderRadius: {
+                        '4xl': '2rem',
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .shadow-soft { box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05); }
+        }
+        body {
+            background-color: theme('colors.surface');
+            color: theme('colors.text');
+        }
+    </style>
+    <script src="purify.min.js"></script>
+    <script src="loader.js"></script>
+</head>
+<body class="antialiased font-sans flex flex-col h-full min-h-screen">
+
+    <div class="max-w-md mx-auto w-full px-6 pt-8 pb-32 space-y-6 flex-1">
+
+        <!-- Header -->
+        <div class="flex items-center justify-between">
+            <button onclick="window.location.href='profile.html'" class="w-10 h-10 rounded-full bg-white shadow-soft border border-surface-dim flex items-center justify-center hover:bg-surface-dim transition-colors">
+                <span class="material-symbols-outlined text-text">arrow_back</span>
+            </button>
+            <h1 class="text-2xl font-bold text-primary garden-title">My Garden</h1>
+            <div class="w-10"></div>
+        </div>
+
+        <!-- Stats Bar -->
+        <div class="bg-white rounded-3xl shadow-soft border border-surface-dim p-4">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center">
+                    <span class="text-2xl">🌿</span>
+                </div>
+                <div class="flex-1">
+                    <p id="garden-stats" class="text-sm font-bold text-text garden-stats-text">Loading...</p>
+                    <p class="text-xs text-text-muted garden-subtitle">Your growing collection</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Garden Grid -->
+        <div id="garden-grid" class="space-y-4">
+            <div class="flex justify-center py-12">
+                <span class="material-symbols-outlined animate-spin text-primary text-3xl">autorenew</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-3rem)] max-w-sm bg-white/80 backdrop-blur-xl border border-white/40 shadow-soft rounded-full px-6 py-3 z-40 flex justify-between items-center">
+        <a href="home.html" class="flex flex-col items-center gap-1 text-text-muted hover:text-primary transition-colors">
+            <span class="material-symbols-outlined text-[24px]">home</span>
+            <span class="text-[10px] font-medium tracking-wide nav-home">Home</span>
+        </a>
+        <a href="product.html" class="flex flex-col items-center gap-1 text-text-muted hover:text-primary transition-colors">
+            <span class="material-symbols-outlined text-[24px]">local_florist</span>
+            <span class="text-[10px] font-medium tracking-wide nav-shop">Shop</span>
+        </a>
+        <a href="profile.html" class="flex flex-col items-center gap-1 text-primary transition-colors">
+            <span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">person</span>
+            <span class="text-[10px] font-medium tracking-wide nav-profile">Profile</span>
+        </a>
+    </nav>
+
+<script>
+    const API_URL = window.API_URL || '';
+
+    async function loadGarden() {
+        const grid = document.getElementById('garden-grid');
+        const stats = document.getElementById('garden-stats');
+        const isAr = localStorage.getItem('site_language') === 'ar';
+
+        try {
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            if (!user || !token) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            const res = await fetch(`${API_URL}/api/orders/${user.email}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (!res.ok) throw new Error('Failed to load orders');
+            const orders = await res.json();
+
+            // Collect all items from completed orders
+            const gardenItems = [];
+            const completedOrders = orders.filter(o => o.status === 'completed');
+            completedOrders.forEach(o => {
+                const data = JSON.parse(o.order_data);
+                const orderDate = window.formatDate ? window.formatDate(o.created_at, 'short') : '';
+                const orderDateFull = window.formatDate ? window.formatDate(o.created_at) : '';
+                data.items.forEach(item => {
+                    const displayName = (isAr && item.name_ar) ? item.name_ar : (typeof window.getLangField === 'function' ? window.getLangField(item, 'name') : item.name);
+                    gardenItems.push({
+                        id: item.id,
+                        name: displayName,
+                        image: item.image || '',
+                        date: orderDate,
+                        dateFull: orderDateFull,
+                        quantity: item.quantity,
+                        price: item.price
+                    });
+                });
+            });
+
+            // Update stats
+            if (gardenItems.length === 0) {
+                stats.textContent = isAr ? 'لا توجد نباتات بعد' : 'No plants yet';
+            } else {
+                stats.textContent = isAr
+                    ? `لديك ${gardenItems.length} نبتة في حديقتك`
+                    : `You have ${gardenItems.length} plant${gardenItems.length !== 1 ? 's' : ''} in your garden`;
+            }
+
+            // Render
+            if (gardenItems.length === 0) {
+                grid.innerHTML = `
+                <div class="bg-white p-8 rounded-3xl shadow-soft text-center border border-surface-dim mt-4">
+                    <div class="w-20 h-20 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-4xl">🌱</span>
+                    </div>
+                    <h2 class="text-lg font-bold text-text mb-2">${isAr ? 'حديقتك فارغة' : 'Your Garden is Empty'}</h2>
+                    <p class="text-text-muted mb-5 text-sm leading-relaxed">${isAr ? 'كل حديقة رائعة تبدأ ببذرة واحدة. اشترِ نباتاً وأكمل الطلب لتراه هنا!' : 'Every great garden starts with a single seed. Buy a plant and complete your order to see it here!'}</p>
+                    <button onclick="window.location.href='product.html'" class="bg-primary text-white font-bold py-3 px-8 rounded-full shadow-soft hover:bg-primary/90 transition-colors text-sm">
+                        ${isAr ? 'ابدأ التسوق' : 'Start Shopping'}
+                    </button>
+                </div>`;
+                return;
+            }
+
+            const bgs = ['bg-[#e8ebe6]', 'bg-[#e2e8e0]', 'bg-[#f8deb1]/30', 'bg-primary/5'];
+            const iconClasses = ['text-blue-500', 'text-primary', 'text-orange-500', 'text-purple-500'];
+            const icons = ['water_drop', 'eco', 'park', 'yard'];
+
+            grid.innerHTML = `
+            <div class="grid grid-cols-2 gap-4">
+                ${gardenItems.map((item, index) => {
+                    const bgClass = bgs[index % bgs.length];
+                    const iconClass = iconClasses[index % iconClasses.length];
+                    const icon = icons[index % icons.length];
+                    return `
+                    <div class="flex flex-col gap-2 group cursor-pointer" onclick="window.location.href='product.html?id=${item.id}'">
+                        <div class="relative aspect-[4/5] w-full overflow-hidden rounded-3xl ${bgClass} shadow-soft">
+                            <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110 mix-blend-multiply" style="background-image: url('${item.image}');"></div>
+                            <div class="absolute top-3 ${isAr ? 'left-3' : 'right-3'} flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-soft ${iconClass}">
+                                <span class="material-symbols-outlined text-[16px]">${icon}</span>
+                            </div>
+                            ${item.quantity > 1 ? `<div class="absolute bottom-3 ${isAr ? 'right-3' : 'left-3'} bg-white/90 backdrop-blur-sm rounded-full px-2 py-0.5 text-xs font-bold text-primary shadow-sm">×${item.quantity}</div>` : ''}
+                        </div>
+                        <div class="px-1">
+                            <p class="font-semibold text-text leading-tight truncate text-sm" title="${item.name}">${item.name}</p>
+                            <p class="text-xs text-text-muted mt-0.5">${isAr ? 'تم الشراء في' : 'Purchased'} ${item.date}</p>
+                        </div>
+                    </div>`;
+                }).join('')}
+            </div>`;
+
+        } catch (err) {
+            console.error('Error loading garden:', err);
+            grid.innerHTML = `<p class="text-center text-red-500 py-8">${isAr ? 'حدث خطأ أثناء تحميل حديقتك' : 'Error loading your garden'}</p>`;
+        }
+    }
+
+    // Apply translations
+    function applyGardenTranslations() {
+        const isAr = localStorage.getItem('site_language') === 'ar';
+        document.querySelector('.garden-title').textContent = isAr ? 'حديقتي' : 'My Garden';
+        document.querySelector('.garden-subtitle').textContent = isAr ? 'مجموعتك النامية' : 'Your growing collection';
+        document.querySelector('.nav-home').textContent = isAr ? 'الرئيسية' : 'Home';
+        document.querySelector('.nav-shop').textContent = isAr ? 'المتجر' : 'Shop';
+        document.querySelector('.nav-profile').textContent = isAr ? 'حسابي' : 'Profile';
+
+        // Fix RTL
+        if (isAr) {
+            document.documentElement.dir = 'rtl';
+            document.documentElement.lang = 'ar';
+            // Flip back arrow
+            document.querySelector('.material-symbols-outlined.text-text').textContent = 'arrow_forward';
+        } else {
+            document.documentElement.dir = 'ltr';
+            document.documentElement.lang = 'en';
+        }
+    }
+
+    applyGardenTranslations();
+    loadGarden();
+</script>
+</body>
+</html>
