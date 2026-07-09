@@ -433,7 +433,7 @@
                         const imgSrc = i.image || '';
                         return `
                         <div class="flex items-center gap-3 py-2">
-                            ${imgSrc ? `<img src="${imgSrc}" alt="${displayName}" class="w-10 h-10 rounded-lg object-cover bg-surface-dim shrink-0">` : `<div class="w-10 h-10 rounded-lg bg-surface-dim flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-text-muted text-base">eco</span></div>`}
+                            ${imgSrc ? `<img src="${imgSrc}" alt="${displayName}" class="w-10 h-10 rounded-lg object-contain bg-surface-dim shrink-0">` : `<div class="w-10 h-10 rounded-lg bg-surface-dim flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-text-muted text-base">eco</span></div>`}
                             <div class="flex-1 min-w-0">
                                 <p class="text-sm font-semibold text-text truncate">${displayName}</p>
                                 <p class="text-xs text-text-muted">${i.quantity} × ${t('JOD')} ${i.price.toFixed(2)}</p>
