@@ -27,7 +27,7 @@ const Cart = {
 
         if (existingItem) {
             if (product.stock !== undefined && existingItem.quantity + 1 > product.stock) {
-                this.showToast('Sorry, insufficient stock available!', true);
+                this.showToast('Sorry, out of stock!', true);
                 return;
             }
             existingItem.quantity += 1;
@@ -127,7 +127,7 @@ const Cart = {
 
         if (item) {
             if (change > 0 && item.stock !== undefined && item.quantity + change > item.stock) {
-                this.showToast('Sorry, insufficient stock available!', true);
+                this.showToast('Sorry, out of stock!', true);
                 return;
             }
             item.quantity += change;
@@ -180,38 +180,44 @@ const Cart = {
             return;
         }
 
-        cartContent.innerHTML = items.map(item => `
+        cartContent.innerHTML = items.map(item => {
+            const displayName = window.getLangField ? window.getLangField(item, 'name') : item.name;
+            const displayDesc = window.getLangField ? window.getLangField(item, 'description') : (item.description || '');
+            return `
             <div class="group bg-surface-light rounded-2xl p-3 shadow-sm border border-slate-100 flex gap-4 transition-all hover:shadow-md">
                 <div class="relative w-24 h-24 shrink-0 rounded-xl overflow-hidden bg-slate-100">
-                    <img alt="${item.name}" class="w-full h-full object-cover" src="${item.image}" />
+                    <img alt="${displayName}" class="w-full h-full object-cover" src="${item.image}" />
                 </div>
                 <div class="flex-1 flex flex-col justify-between py-1">
                     <div>
                         <div class="flex justify-between items-start">
-                            <h3 class="font-bold text-slate-900 leading-tight">${item.name}</h3>
-                            <button onclick="Cart.remove('${item.name}')" class="text-slate-400 hover:text-red-500 transition-colors">
+                            <h3 class="font-bold text-slate-900 leading-tight">${displayName}</h3>
+                            <button onclick="Cart.remove('${item.name.replace(/'/g, "\\'")}')" class="text-slate-400 hover:text-red-500 transition-colors">
                                 <span class="material-symbols-outlined text-[20px]">delete</span>
                             </button>
                         </div>
-                        <p class="text-xs text-slate-500 mt-1 italic">${item.description || ''}</p>
+                        <p class="text-xs text-slate-500 mt-1 italic">${displayDesc}</p>
                     </div>
                     <div class="flex items-end justify-between mt-2">
                         <p class="font-bold text-primary text-lg">JOD ${item.price.toFixed(2)}</p>
                         <div class="flex items-center bg-slate-100 rounded-full p-1 h-8">
-                            <button onclick="Cart.updateQuantity('${item.name}', -1)" class="w-7 h-full flex items-center justify-center text-slate-600 hover:bg-white rounded-full transition-colors">
+                            <button onclick="Cart.updateQuantity('${item.name.replace(/'/g, "\\'")}', -1)" class="w-7 h-full flex items-center justify-center text-slate-600 hover:bg-white rounded-full transition-colors">
                                 <span class="material-symbols-outlined text-[16px]">remove</span>
                             </button>
                             <span class="w-8 text-center text-sm font-semibold text-slate-900 quantity-display">${item.quantity}</span>
-                            <button onclick="Cart.updateQuantity('${item.name}', 1)" class="w-7 h-full flex items-center justify-center bg-primary text-white rounded-full shadow-sm hover:brightness-110 transition-all">
+                            <button onclick="Cart.updateQuantity('${item.name.replace(/'/g, "\\'")}', 1)" class="w-7 h-full flex items-center justify-center bg-primary text-white rounded-full shadow-sm hover:brightness-110 transition-all">
                                 <span class="material-symbols-outlined text-[16px]">add</span>
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
-        `).join('');
+        `}).join('');
 
         this.updateTotals(items);
+        if (typeof window.applyTranslations === 'function') {
+            window.applyTranslations();
+        }
     },
 
     updateTotals(items) {
@@ -221,18 +227,20 @@ const Cart = {
         const tax = 0;
         const total = subtotal + shipping + tax;
 
+        const jodText = (typeof window.t === 'function' ? window.t('JOD') : 'JOD') + ' ';
+
         const subtotalEl = document.getElementById('cart-subtotal');
         if (subtotalEl) {
-            subtotalEl.innerText = 'JOD ' + subtotal.toFixed(2);
+            subtotalEl.innerText = jodText + subtotal.toFixed(2);
 
             const shippingEl = document.getElementById('cart-shipping');
-            if (shippingEl) shippingEl.innerText = 'JOD ' + shipping.toFixed(2);
+            if (shippingEl) shippingEl.innerText = jodText + shipping.toFixed(2);
 
             const taxEl = document.getElementById('cart-tax');
-            if (taxEl) taxEl.innerText = 'JOD ' + tax.toFixed(2);
+            if (taxEl) taxEl.innerText = jodText + tax.toFixed(2);
 
             const totalEl = document.getElementById('cart-total');
-            if (totalEl) totalEl.innerText = 'JOD ' + total.toFixed(2);
+            if (totalEl) totalEl.innerText = jodText + total.toFixed(2);
         }
     },
 

@@ -519,6 +519,10 @@ function renderAddresses() {
             `;
             container.innerHTML += html;
         });
+
+        if (typeof window.applyTranslations === 'function') {
+            window.applyTranslations();
+        }
     }
 
     function selectAddress(id) {
@@ -797,10 +801,10 @@ function renderAddresses() {
                     <div class="flex-1 min-w-0 flex flex-col justify-between h-full py-1">
                         <div class="flex justify-between items-start gap-2">
                             <h4 class="text-sm font-semibold text-primary truncate flex-1" title="${displayName}">${displayName}</h4>
-                            <span class="text-sm font-bold text-primary whitespace-nowrap">JOD ${itemTotal.toFixed(2)}</span>
+                            <span class="text-sm font-bold text-primary whitespace-nowrap">${(typeof window.t === 'function' ? window.t('JOD') : 'JOD')} ${itemTotal.toFixed(2)}</span>
                         </div>
                         <div class="flex items-center justify-between mt-2">
-                            <p class="text-xs text-text-muted font-medium">JOD ${item.price.toFixed(2)} each</p>
+                            <p class="text-xs text-text-muted font-medium">${(typeof window.t === 'function' ? window.t('JOD') : 'JOD')} ${item.price.toFixed(2)} ${(typeof window.t === 'function' ? window.t('each') : 'each')}</p>
                             
                             <!-- Quantity Controls -->
                             <div class="flex items-center bg-surface-dim rounded-full p-1 h-8">
@@ -822,7 +826,8 @@ function renderAddresses() {
             });
         }
 
-        subtotalEl.innerText = 'JOD ' + currentSubtotal.toFixed(2);
+        const jodText = (typeof window.t === 'function' ? window.t('JOD') : 'JOD') + ' ';
+        subtotalEl.innerText = jodText + currentSubtotal.toFixed(2);
 
         // Determine currently selected payment method to update total correctly
         const pickupSelected = (document.getElementById('payment-pickup') && document.getElementById('payment-pickup').classList.contains('border-primary'));
@@ -830,6 +835,10 @@ function renderAddresses() {
             selectPayment('pickup');
         } else {
             selectPayment('cod');
+        }
+        
+        if (typeof window.applyTranslations === 'function') {
+            window.applyTranslations();
         }
     }
 
@@ -953,12 +962,13 @@ function renderAddresses() {
 
         if (!shippingSection || !shippingRow || !shippingCostEl || !totalEl || !subtotalEl) return;
 
-        // Parse current values (simple parsing assuming $ format)
-        let subtotalText = subtotalEl.innerText.replace('JOD', '').trim();
+        // Parse current values (simple parsing ignoring non-numeric chars)
+        let subtotalText = subtotalEl.innerText.replace(/[^\d.-]/g, '');
         let subtotal = parseFloat(subtotalText);
         if (isNaN(subtotal)) subtotal = 0;
 
         const currentShipping = (subtotal > 0) ? originalShipping : 0;
+        const jodText = (typeof window.t === 'function' ? window.t('JOD') : 'JOD') + ' ';
 
         if (method === 'pickup') {
             // Hide address
@@ -966,16 +976,16 @@ function renderAddresses() {
             // Hide shipping row
             shippingRow.style.display = 'none';
             // Update Total (just subtotal)
-            totalEl.innerText = 'JOD ' + subtotal.toFixed(2);
+            totalEl.innerText = jodText + subtotal.toFixed(2);
         } else {
             // Show address
             shippingSection.style.display = 'block';
             // Show shipping row
             shippingRow.style.display = 'flex';
             // Restore shipping
-            shippingCostEl.innerText = 'JOD ' + currentShipping.toFixed(2);
+            shippingCostEl.innerText = jodText + currentShipping.toFixed(2);
             // Update Total
-            totalEl.innerText = 'JOD ' + (subtotal + currentShipping).toFixed(2);
+            totalEl.innerText = jodText + (subtotal + currentShipping).toFixed(2);
         }
     }
 

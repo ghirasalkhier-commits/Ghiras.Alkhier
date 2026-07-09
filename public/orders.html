@@ -131,7 +131,10 @@
             } catch (e) {
                 console.error("Failed to parse order data", o.order_data);
             }
-            const items = data.items.map(i => `${i.quantity}x ${i.name}`).join('<br>');
+            const items = data.items.map(i => {
+                const displayName = window.getLangField ? window.getLangField(i, 'name') : i.name;
+                return `${i.quantity}x ${displayName}`;
+            }).join('<br>');
             const date = new Date(o.created_at).toLocaleString();
             
             let statusText = o.status;

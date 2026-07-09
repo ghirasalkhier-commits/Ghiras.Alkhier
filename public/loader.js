@@ -38,6 +38,12 @@
                 font-family: 'Material Symbols Outlined' !important;
                 direction: ltr !important;
             }
+            nav {
+                direction: ltr !important;
+            }
+            header {
+                direction: ltr !important;
+            }
         `;
         document.head.appendChild(style);
     }
@@ -61,7 +67,119 @@
         'Log Out': 'تسجيل خروج',
         'Admin Dashboard': 'لوحة التحكم',
         'Saved Addresses': 'العناوين المحفوظة',
-        'Delete Account': 'حذف الحساب'
+        'Delete Account': 'حذف الحساب',
+        
+        'Update your profile': 'تحديث حسابك',
+        'My Information': 'بياناتي الشخصية',
+        'ACCOUNT SETTINGS': 'إعدادات الحساب',
+        'Plant your first seed today!': 'ازرع بذرتك الأولى اليوم!',
+        '!Plant your first seed today': 'ازرع بذرتك الأولى اليوم!',
+        'Your Garden is Empty': 'حديقتك فارغة',
+        'Every great garden starts with a single seed. Buy a plant and watch your garden grow here!': 'كل حديقة عظيمة تبدأ ببذرة واحدة. اشترِ نبتة وشاهد حديقتك تنمو هنا!',
+        '!grow here': 'كل حديقة عظيمة تبدأ ببذرة واحدة. اشترِ نبتة وشاهد حديقتك تنمو هنا!',
+        'Every great garden starts with a single seed. Buy a plant and watch your garden': 'كل حديقة عظيمة تبدأ ببذرة واحدة. اشترِ نبتة وشاهد حديقتك تنمو هنا!',
+        'Start Growing': 'ابدأ الزراعة',
+        'No orders yet': 'لا توجد طلبات بعد',
+        'Your order history will appear here.': 'سجل طلباتك سيظهر هنا.',
+        'Your order history will appear here': 'سجل طلباتك سيظهر هنا.',
+        '.Your order history will appear here': 'سجل طلباتك سيظهر هنا.',
+        'Start Shopping': 'ابدأ التسوق',
+        
+        '...Search for plants or care tools': '...ابحث عن نباتات أو أدوات عناية',
+        'Discover Our Categories': 'اكتشف أقسامنا',
+        'Carefully selected Ghiras Alkhier collections': 'تشكيلات غراس الخير المختارة بعناية',
+        'All Plants and Products': 'جميع النباتات والمنتجات',
+        'We couldn\'t find any products matching your search.': 'لم نتمكن من العثور على أي منتجات تطابق بحثك.',
+        'We couldn\'t find any products matching your search': 'لم نتمكن من العثور على أي منتجات تطابق بحثك.',
+        '.We couldn\'t find any products matching your search': 'لم نتمكن من العثور على أي منتجات تطابق بحثك.',
+        'Bring Nature Home': 'اجلب الطبيعة إلى منزلك',
+        'Cultivate your personal sanctuary with our curated collection of resilient, beautiful houseplants and organic care essentials designed for modern living.': 'ازرع ملاذك الشخصي مع مجموعتنا المختارة من النباتات المنزلية المرنة والجميلة ومستلزمات العناية العضوية المصممة للحياة العصرية.',
+        'Cultivate your personal sanctuary with our curated collection of resilient, beautiful': 'ازرع ملاذك الشخصي مع مجموعتنا المختارة من النباتات المنزلية المرنة والجميلة ومستلزمات العناية العضوية المصممة للحياة العصرية.',
+        '.houseplants and organic care essentials designed for modern living': 'ازرع ملاذك الشخصي مع مجموعتنا المختارة من النباتات المنزلية المرنة والجميلة ومستلزمات العناية العضوية المصممة للحياة العصرية.',
+        'Shop the Collection': 'تسوق المجموعة',
+        
+        'Botanical Clarity for your Home. We believe in the restorative power of nature, brought indoors with mindful design and sustainable practices.': 'وضوح نباتي لمنزلك. نؤمن بالقوة التصالحية للطبيعة، ونجلبها إلى الداخل بتصميم واعٍ وممارسات مستدامة.',
+        'Botanical Clarity for your Home. We believe in the restorative power of nature, brought indoors': 'وضوح نباتي لمنزلك. نؤمن بالقوة التصالحية للطبيعة، ونجلبها إلى الداخل بتصميم واعٍ وممارسات مستدامة.',
+        '.with mindful design and sustainable practices': 'وضوح نباتي لمنزلك. نؤمن بالقوة التصالحية للطبيعة، ونجلبها إلى الداخل بتصميم واعٍ وممارسات مستدامة.',
+        'Company': 'الشركة',
+        'About Us': 'من نحن',
+        'Contact': 'اتصل بنا',
+        'Explore': 'استكشف',
+        'Shop All': 'تسوق الكل',
+        'Plant Care': 'العناية بالنباتات',
+        
+        'Manage Products': 'إدارة المنتجات',
+        'No products found.': 'لا توجد منتجات.',
+        'No products found': 'لا توجد منتجات.',
+        '.No products found': 'لا توجد منتجات.',
+        
+        'Manage Categories': 'إدارة الأقسام',
+        'CATEGORY NAME': 'اسم القسم',
+        'e.g. Indoor Plants': 'مثال: نباتات داخلية',
+        'CATEGORY NAME (ARABIC)': 'اسم القسم (بالعربية)',
+        'CATEGORY IMAGE': 'صورة القسم',
+        'Click to upload image': 'اضغط لرفع صورة',
+        'PNG, JPG or WEBP (Max 2MB)': 'PNG، JPG أو WEBP (الحد الأقصى 2MB)',
+        'Add Category': 'إضافة قسم',
+        
+        'Manage Orders': 'إدارة الطلبات',
+        '...Search by Order ID': '...ابحث برقم الطلب',
+        'Current': 'الحالية',
+        'Delivered': 'المكتملة',
+        'Cancelled': 'الملغاة',
+        'No orders found matching your criteria.': 'لا توجد طلبات تطابق بحثك.',
+        'No orders found matching your criteria': 'لا توجد طلبات تطابق بحثك.',
+        '.No orders found matching your criteria': 'لا توجد طلبات تطابق بحثك.',
+        
+        'Products': 'المنتجات',
+        'Orders': 'الطلبات',
+        'Users': 'المستخدمين',
+        
+        'Your Cart': 'سلة المشتريات',
+        'Your cart is empty': 'سلتك فارغة',
+        'Apply': 'تطبيق',
+        'Promo Code': 'رمز الخصم',
+        'Subtotal': 'المجموع الفرعي',
+        'Total': 'المجموع الإجمالي',
+        'Proceed to Checkout': 'متابعة الدفع',
+        
+        'Delivery Address': 'عنوان التوصيل',
+        'Address': 'العنوان',
+        'Payment': 'الدفع',
+        'Select Delivery Address': 'اختر عنوان التوصيل',
+        'No addresses found. Add one below.': 'لا توجد عناوين. أضف عنواناً بالأسفل.',
+        'No addresses found. Add one below': 'لا توجد عناوين. أضف عنواناً بالأسفل.',
+        '.No addresses found. Add one below': 'لا توجد عناوين. أضف عنواناً بالأسفل.',
+        'Add New Address': 'إضافة عنوان جديد',
+        'Continue to Payment': 'المتابعة للدفع',
+        
+        'New Address': 'عنوان جديد',
+        'Address Name': 'اسم العنوان',
+        'Building Number / Name': 'رقم / اسم المبنى',
+        'Extra Details (Optional)': 'تفاصيل إضافية (اختياري)',
+        'Floor / Apt (Optional)': 'الطابق / الشقة (اختياري)',
+        'Add Address': 'إضافة العنوان',
+        
+        'Clear Cart': 'إفراغ السلة',
+        'Order Summary': 'ملخص الطلب',
+        'Shipping': 'الشحن',
+        'Payment Method': 'طريقة الدفع',
+        'Cash on Delivery': 'الدفع عند الاستلام',
+        'Pay when you receive your order': 'ادفع عند استلام طلبك',
+        'Pickup': 'استلام من المتجر',
+        'Pick up from our store': 'استلم طلبك من متجرنا',
+        'Personal Details': 'التفاصيل الشخصية',
+        'Edit': 'تعديل',
+        'Total Amount': 'المبلغ الإجمالي',
+        'Place Order': 'تأكيد الطلب',
+        'Change': 'تغيير',
+        'CONTACT INFO / معلومات التواصل': 'معلومات التواصل',
+        'Contact Info / معلومات التواصل': 'معلومات التواصل',
+        'CONTACT INFO': 'معلومات التواصل',
+        'Address Name *': 'اسم العنوان *',
+        'Building Number / Name *': 'رقم / اسم المبنى *',
+        'each': 'للقطعة',
+        'JOD': 'د.أ'
     };
     
     window.t = function(text) {
