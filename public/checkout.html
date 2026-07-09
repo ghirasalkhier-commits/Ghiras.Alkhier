@@ -166,17 +166,6 @@
                     </div>
                     <span id="check-cod" class="material-symbols-outlined text-primary text-xl">check_circle</span>
                 </div>
-
-                <div onclick="selectPayment('pickup')" id="payment-pickup" class="flex items-center gap-4 p-4 rounded-3xl border border-surface-dim bg-white cursor-pointer hover:border-primary/50 transition-all opacity-60 shadow-soft">
-                    <div class="w-10 h-10 rounded-full bg-surface-dim flex items-center justify-center text-text-muted shrink-0 icon-container">
-                        <span class="material-symbols-outlined text-[24px]">store</span>
-                    </div>
-                    <div class="flex-1">
-                        <h4 class="font-bold text-text">Pickup</h4>
-                        <p class="text-xs text-text-muted">Pick up from our store</p>
-                    </div>
-                    <span id="check-pickup" class="material-symbols-outlined text-primary text-xl hidden">check_circle</span>
-                </div>
             </div>
         </section>
 
@@ -195,7 +184,7 @@
                         <p id="summary-phone" class="text-text-muted text-sm mt-0.5"></p>
                     </div>
                 </div>
-                <button onclick="openPersonalDetailsModal()" class="shrink-0 text-primary text-sm font-semibold hover:text-primary/80 transition-colors px-2 py-1">Edit</button>
+                <button onclick="openPersonalDetailsModal()" class="shrink-0 text-primary font-bold text-sm bg-primary/10 px-4 py-2 rounded-full hover:bg-primary/20 transition-colors">Edit</button>
             </div>
         </div>
 
@@ -216,7 +205,7 @@
                             <p id="user-phone" class="text-text-muted text-sm leading-relaxed mt-0.5"></p>
                         </div>
                     </div>
-                    <button onclick="openPersonalDetailsModal()" class="text-primary font-bold text-sm bg-primary/10 px-4 py-2 rounded-full hover:bg-primary/20 transition-colors">Edit</button>
+                    <button onclick="openPersonalDetailsModal()" class="shrink-0 text-primary font-bold text-sm bg-primary/10 px-4 py-2 rounded-full hover:bg-primary/20 transition-colors">Edit</button>
                 </div>
             </div>
             <div class="px-6">
@@ -230,7 +219,7 @@
                             <p id="selected-addr-floor" class="text-text-muted text-sm leading-relaxed mt-0.5"></p>
                         </div>
                     </div>
-                    <button onclick="goBackToStep1()" class="shrink-0 text-primary text-sm font-semibold hover:text-primary/80 transition-colors px-2 py-1">
+                    <button onclick="goBackToStep1()" class="shrink-0 text-primary font-bold text-sm bg-primary/10 px-4 py-2 rounded-full hover:bg-primary/20 transition-colors">
                         Change
                     </button>
                 </div>
@@ -964,10 +953,7 @@ function renderAddresses() {
 
         if (!shippingSection || !shippingRow || !shippingCostEl || !totalEl || !subtotalEl) return;
 
-        // Parse current values (simple parsing ignoring non-numeric chars)
-        let subtotalText = subtotalEl.innerText.replace(/[^\d.-]/g, '');
-        let subtotal = parseFloat(subtotalText);
-        if (isNaN(subtotal)) subtotal = 0;
+        let subtotal = currentSubtotal || 0;
 
         const currentShipping = (subtotal > 0) ? originalShipping : 0;
         const jodText = (typeof window.t === 'function' ? window.t('JOD') : 'JOD') + ' ';

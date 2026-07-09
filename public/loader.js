@@ -263,7 +263,13 @@
         'Please log in to place an order': 'الرجاء تسجيل الدخول لإتمام الطلب',
         'Please select a payment method': 'الرجاء اختيار طريقة الدفع',
         'Order': 'الطلب',
-        'Purchased': 'تم الشراء في'
+        'Purchased': 'تم الشراء في',
+        'Contact Info Required': 'معلومات الاتصال مطلوبة',
+        'Please provide your contact information to complete the order.': 'يرجى تقديم معلومات الاتصال الخاصة بك لإتمام الطلب.',
+        'First Name *': 'الاسم الأول *',
+        'Last Name *': 'اسم العائلة *',
+        'Phone Number *': 'رقم الهاتف *',
+        'Save Information': 'حفظ المعلومات'
     };
     
     window.t = function(text) {
