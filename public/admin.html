@@ -170,6 +170,7 @@
                                 <li onclick="selectWateringUnit('Hours', 'Hourly (بالساعة)')" class="px-4 py-3 hover:bg-surface-dim cursor-pointer text-sm text-text transition-colors">Hourly (بالساعة)</li>
                                 <li onclick="selectWateringUnit('Days', 'Daily (باليوم)')" class="px-4 py-3 hover:bg-surface-dim cursor-pointer text-sm text-text transition-colors border-t border-surface-dim/50">Daily (باليوم)</li>
                                 <li onclick="selectWateringUnit('Weeks', 'Weekly (بالأسبوع)')" class="px-4 py-3 hover:bg-surface-dim cursor-pointer text-sm text-text transition-colors border-t border-surface-dim/50">Weekly (بالأسبوع)</li>
+                                <li onclick="selectWateringUnit('None', 'None (لا يحتاج)')" class="px-4 py-3 hover:bg-surface-dim cursor-pointer text-sm text-text transition-colors border-t border-surface-dim/50 text-red-500">None (لا يحتاج)</li>
                             </ul>
                         </div>
                     </div>
@@ -416,6 +417,13 @@
     function selectWateringUnit(value, text) {
         document.getElementById('product-watering-unit').value = value;
         document.getElementById('watering-display-text').innerText = text;
+        const numInput = document.getElementById('product-watering-number');
+        if (value === 'None') {
+            numInput.classList.add('hidden');
+        } else {
+            numInput.classList.remove('hidden');
+            if (!numInput.value) numInput.value = '1';
+        }
         toggleWateringDropdown();
     }
 
@@ -463,7 +471,8 @@
         formData.append('price', parseFloat(document.getElementById('product-price').value));
         formData.append('category', document.getElementById('product-category').value);
         formData.append('stock', document.getElementById('product-stock').value);
-        const watering = document.getElementById('product-watering-number').value + '|' + document.getElementById('product-watering-unit').value;
+        const wUnit = document.getElementById('product-watering-unit').value;
+        const watering = wUnit === 'None' ? '' : document.getElementById('product-watering-number').value + '|' + wUnit;
         formData.append('watering', watering);
         
         if (selectedFiles.length > 0) {
@@ -486,40 +495,13 @@
         document.getElementById('product-form').reset();
         document.getElementById('product-id').value = '';
         document.getElementById('product-category').value = '';
-        document.getElementById('product-watering-number').value = '1';
-        document.getElementById('product-watering-unit').value = 'Days';
-        document.getElementById('watering-display-text').innerText = 'Daily (باليوم)';
+        document.getElementById('product-watering-number').value = '';
+        document.getElementById('product-watering-number').classList.add('hidden');
+        document.getElementById('product-watering-unit').value = 'None';
+        document.getElementById('watering-display-text').innerText = 'None (لا يحتاج)';
         document.getElementById('category-display-text').innerText = 'Select Category';
         document.getElementById('existing-images-label').classList.add('hidden');
-        document.getElementById('existing-images-data').value = '';
-        document.getElementById('image-preview-container').innerHTML = '';
-        document.getElementById('form-title').innerText = 'Add New Product';
-        document.getElementById('product-submit-text').innerText = 'Add Product';
-        selectedFiles = [];
-        document.getElementById('product-form-container').classList.add('hidden');
-        loadProducts();
-    }
-
-
-    // Image Preview Logic (Robust Accumulation)
-    document.getElementById('product-images').addEventListener('change', function(e) {
-        try {
-            const files = Array.from(e.target.files);
-            if (files.length === 0) return;
-            
-            selectedFiles = selectedFiles.concat(files);
-            renderPreviews();
-            
-            // Allow re-selection of the same file
-            e.target.value = '';
-        } catch (error) {
-            console.error("Preview error:", error);
-            alert("حدث خطأ في معاينة الصورة، يرجى المحاولة مرة أخرى.");
-        }
-    });
-    
-    function removeSelectedFile(index) {
-        selectedFiles.splice(index, 1);
+        selectedFiles.splice(0, selectedFiles.length);
         renderPreviews();
     }
     
