@@ -50,7 +50,7 @@ window.formatDate = function(raw, options) {
 // --- Language Setup ---
 (function() {
     var lang = localStorage.getItem('site_language');
-    if (window.location.pathname.includes('login.html')) {
+    if (window.location.pathname.includes('login')) {
         lang = 'en';
     }
     if (lang === 'ar') {
@@ -329,7 +329,7 @@ window.formatDate = function(raw, options) {
     };
     
     window.t = function(text) {
-        if (window.location.pathname.includes('login.html')) return text;
+        if (window.location.pathname.includes('login')) return text;
         if (localStorage.getItem('site_language') === 'ar') {
             return dict[text] || text;
         }
@@ -337,7 +337,7 @@ window.formatDate = function(raw, options) {
     };
 
     window.applyTranslations = function() {
-        if (window.location.pathname.includes('login.html')) return;
+        if (window.location.pathname.includes('login')) return;
         if (localStorage.getItem('site_language') !== 'ar') return;
         
         const walk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
@@ -546,7 +546,7 @@ window.fetch = async function(...args) {
     if (response.status === 401 && url.includes('/api/') && !url.includes('/api/auth/')) {
         localStorage.removeItem('token');
         localStorage.removeItem('currentUser');
-        if (!window.location.href.includes('login.html')) {
+        if (!window.location.href.includes('login')) {
             window.location.href = 'login.html';
         }
     }
