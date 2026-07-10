@@ -50,6 +50,9 @@ window.formatDate = function(raw, options) {
 // --- Language Setup ---
 (function() {
     var lang = localStorage.getItem('site_language');
+    if (window.location.pathname.includes('login.html')) {
+        lang = 'en';
+    }
     if (lang === 'ar') {
         document.documentElement.setAttribute('dir', 'rtl');
         document.documentElement.setAttribute('lang', 'ar');
@@ -326,6 +329,7 @@ window.formatDate = function(raw, options) {
     };
     
     window.t = function(text) {
+        if (window.location.pathname.includes('login.html')) return text;
         if (localStorage.getItem('site_language') === 'ar') {
             return dict[text] || text;
         }
@@ -333,6 +337,7 @@ window.formatDate = function(raw, options) {
     };
 
     window.applyTranslations = function() {
+        if (window.location.pathname.includes('login.html')) return;
         if (localStorage.getItem('site_language') !== 'ar') return;
         
         const walk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
@@ -376,31 +381,6 @@ window.formatDate = function(raw, options) {
         applyTranslations();
     });
 })();
-
-// First Time Language Selector Modal
-document.addEventListener('DOMContentLoaded', function() {
-    if (window.location.pathname.includes('login.html')) return; // Don't show on login page
-    
-    if (!localStorage.getItem('site_language')) {
-        var modalHtml = `
-            <div id="language-modal" style="position: fixed; inset: 0; z-index: 100000; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
-                <div style="background: white; border-radius: 24px; padding: 32px; max-width: 400px; width: 90%; text-align: center; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);">
-                    <div style="width: 80px; height: 80px; background: #fbf9f8; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;">
-                        <span class="material-symbols-outlined" style="font-size: 40px; color: #135c38;">language</span>
-                    </div>
-                    <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 8px; color: #1a1a1a;">Choose Language</h2>
-                    <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 24px; color: #1a1a1a; font-family: 'Cairo', sans-serif;">اختر اللغة</h2>
-                    
-                    <div style="display: flex; flex-direction: column; gap: 12px;">
-                        <button onclick="setLanguage('ar')" style="background: #135c38; color: white; border: none; border-radius: 12px; padding: 16px; font-size: 18px; font-weight: bold; cursor: pointer; font-family: 'Cairo', sans-serif; transition: background 0.3s;">العربية</button>
-                        <button onclick="setLanguage('en')" style="background: #fbf9f8; color: #1a1a1a; border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; font-size: 18px; font-weight: bold; cursor: pointer; transition: background 0.3s;">English</button>
-                    </div>
-                </div>
-            </div>
-        `;
-        document.body.insertAdjacentHTML('beforeend', modalHtml);
-    }
-});
 
 window.setLanguage = function(lang) {
     localStorage.setItem('site_language', lang);
